@@ -19,9 +19,9 @@ const BusFeeTracker = () => {
 
       try {
         const [routesResponse, classesResponse] = await Promise.all([
-          axios.get("https://erp.api.mindgrowthacademy.com/api/bus-routes"),
+          axios.get(`${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`),
           axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
           ),
         ]);
 
@@ -40,7 +40,7 @@ const BusFeeTracker = () => {
       if (!selectedRoute) return;
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`,
         );
         const data = await response.json();
         if (data.length === 0) {
@@ -63,7 +63,7 @@ const BusFeeTracker = () => {
       if (!selectedStudent) return;
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/transactions?student_id=${selectedStudent}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/transactions?student_id=${selectedStudent}`,
         );
         const data = await response.json();
         if (data.length === 0) {
@@ -228,7 +228,7 @@ const BusFeeTracker = () => {
                       </td>
                       <td className="border border-gray-300 px-4 py-2 text-center">
                         {new Date(
-                          transaction.payment_date
+                          transaction.payment_date,
                         ).toLocaleDateString()}
                       </td>
                     </tr>

@@ -67,54 +67,7 @@
 
 // export default Login;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import Navbar from "./Navbar";
-
-
 
 // function Login() {
 //   return (
@@ -123,7 +76,7 @@
 //       <h2 className=" text-center font-semibold text-2xl lg:text-4xl   mt-32  text-white">Enter Your GR ID to Generate Your Certificate</h2>
 
 //       <div className="p-12 mt-16 container flex items-center justify-center mx-auto">
-   
+
 //         {/* <div className="flex flex-col md:flex-row justify-between items-center"> */}
 //           <div className="mb-12 flex flex-col  w-full md:w-[45%]">
 //             <label className="text-white">GR ID</label>
@@ -149,32 +102,6 @@
 // }
 
 // export default Login;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import Navbar from "./Navbar";
 

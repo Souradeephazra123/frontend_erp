@@ -1,18 +1,25 @@
 // LeavingCertificatePDF.js
-import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
-import logoLeft from '../img/WhatsApp Image 2024-07-19 at 15.45.41_45d14541.jpg';
-import logoRight from '../img/cbse-logo-46D5A6B556-seeklogo.com.png';
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  Image,
+  StyleSheet,
+} from "@react-pdf/renderer";
+import logoLeft from "../img/WhatsApp Image 2024-07-19 at 15.45.41_45d14541.jpg";
+import logoRight from "../img/cbse-logo-46D5A6B556-seeklogo.com.png";
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     fontSize: 12,
   },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   logo: {
@@ -20,73 +27,73 @@ const styles = StyleSheet.create({
     height: 60,
   },
   titleContainer: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 10,
   },
   title: {
-    color: '#C8102E',
+    color: "#C8102E",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 5,
   },
   websiteEmail: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 5,
   },
   verticalTableContainer: {
     marginVertical: 20,
-    border: '1px solid black',
+    border: "1px solid black",
   },
   verticalTableHeader: {
-    flexDirection: 'row',
-    border: '1px solid black',
+    flexDirection: "row",
+    border: "1px solid black",
   },
   verticalHeaderItem: {
     width: 100, // Adjust width for vertical headers
     height: 250,
-    border: '1px solid black',
+    border: "1px solid black",
     padding: 5,
     margin: 0,
-    textAlign: 'center',
-    writingMode: 'vertical-lr',
-    transform: 'rotate(180deg)',
-    overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
+    textAlign: "center",
+    writingMode: "vertical-lr",
+    transform: "rotate(180deg)",
+    overflow: "hidden",
+    backgroundColor: "#f0f0f0",
     fontSize: 10, // Adjust font size as needed
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
   },
   verticalTableBody: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   verticalTableBodyItem: {
     width: 100, // Adjust width for vertical body items
     height: 250,
-    border: '1px solid black',
+    border: "1px solid black",
     padding: 5,
     margin: 0,
-    textAlign: 'center',
-    writingMode: 'vertical-lr',
-    transform: 'rotate(180deg)',
-    overflow: 'hidden',
-    backgroundColor: '#ffffff',
+    textAlign: "center",
+    writingMode: "vertical-lr",
+    transform: "rotate(180deg)",
+    overflow: "hidden",
+    backgroundColor: "#ffffff",
     fontSize: 10, // Adjust font size as needed
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     fontSize: 10,
   },
   footerText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
@@ -97,8 +104,12 @@ const LeavingCertificatePDF = ({ formData }) => (
         <Image src={logoLeft} style={styles.logo} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>INDURA ENGLISH SCHOOL (CBSE)</Text>
-          <Text style={styles.subtitle}>Enjangaon (East), Tq, Basmath Dist Hingoli</Text>
-          <Text style={styles.subtitle}>UDISE No.: 27160301903 Affiliation No.: 1131230 School Code: 31217</Text>
+          <Text style={styles.subtitle}>
+            Enjangaon (East), Tq, Basmath Dist Hingoli
+          </Text>
+          <Text style={styles.subtitle}>
+            UDISE No.: 27160301903 Affiliation No.: 1131230 School Code: 31217
+          </Text>
           <Text style={styles.websiteEmail}>
             Website: www.induraenglishschool.in
           </Text>
@@ -112,7 +123,12 @@ const LeavingCertificatePDF = ({ formData }) => (
         <View style={styles.verticalTableHeader}>
           {Object.keys(formData).map((field) => (
             <View key={field} style={styles.verticalHeaderItem}>
-              <Text>{field.split(/(?=[A-Z])/).join(' ').toUpperCase()}</Text>
+              <Text>
+                {field
+                  .split(/(?=[A-Z])/)
+                  .join(" ")
+                  .toUpperCase()}
+              </Text>
             </View>
           ))}
         </View>

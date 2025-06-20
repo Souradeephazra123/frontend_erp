@@ -36,7 +36,7 @@ const FeeTableComponent = () => {
         setAcademicYear(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error)
+        console.error("Error fetching class and division options:", error),
       );
   }, []);
 
@@ -48,7 +48,7 @@ const FeeTableComponent = () => {
         console.log(response);
         if (response.data.message == "Success") {
           const filteredData = response.data.data.filter(
-            (fee) => fee.fee_id !== 0
+            (fee) => fee.fee_id !== 0,
           );
           setFeeData(filteredData);
         } else {
@@ -63,7 +63,7 @@ const FeeTableComponent = () => {
   // Fetch fee categories when modal opens
   const fetchCategories = () => {
     axios
-      .get(`https://erp.api.mindgrowthacademy.com/api/fee-categories")
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/fee-categories`)
       .then((response) => {
         setCategories(response.data);
       })
@@ -76,7 +76,7 @@ const FeeTableComponent = () => {
   const fetchSubcategories = (categoryId) => {
     axios
       .get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories?categoryId=${categoryId}`
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories?categoryId=${categoryId}`,
       )
       .then((response) => {
         setSubcategories(response.data);
@@ -160,8 +160,8 @@ const FeeTableComponent = () => {
 
     try {
       const response = await axios.put(
-        `https://erp.api.mindgrowthacademy.com/api/payment/` + feeId,
-        data
+        `${process.env.REACT_APP_BASE_API_URL}/api/payment/` + feeId,
+        data,
       );
 
       setFormData({
@@ -195,8 +195,8 @@ const FeeTableComponent = () => {
 
       // Make the API call with the data
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/payment/fullpayment/" + Id,
-        paymentData
+        `${process.env.REACT_APP_BASE_API_URL}/api/payment/fullpayment/` + Id,
+        paymentData,
       );
 
       // Handle success response
@@ -221,8 +221,8 @@ const FeeTableComponent = () => {
         paymentAmount: studentInfo?.carryForwardFee,
       };
       await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/payCarryForwardFee",
-        payload
+        `${process.env.REACT_APP_BASE_API_URL}/api/payCarryForwardFee`,
+        payload,
       );
       alert("Carry Forward Fee Paid Successfully!");
       window.location.reload();
@@ -233,7 +233,7 @@ const FeeTableComponent = () => {
   const viewCarryPaymentDetails = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/payment/carry/${studentInfo?.carryForwardFee_id}`
+        `${process.env.REACT_APP_BASE_API_URL}/api/payment/carry/${studentInfo?.carryForwardFee_id}`,
       );
       setCarryPaymentDetails(response.data);
       setCarryModalOpen(true);
@@ -580,7 +580,7 @@ const FeeTableComponent = () => {
                 <p>
                   <strong>Payment Date:</strong>{" "}
                   {new Date(
-                    carryPaymentDetails.paymentDate
+                    carryPaymentDetails.paymentDate,
                   ).toLocaleDateString()}
                 </p>
                 <div className="flex justify-end mt-4">

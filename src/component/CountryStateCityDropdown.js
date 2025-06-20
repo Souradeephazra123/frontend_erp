@@ -1,27 +1,27 @@
 // src/components/CountryStateCityDropdown.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const CountryStateCityDropdown = () => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
-  const apiKey = 'dFhVY0dLQnU3ckdyNVNsb1VsMWZTenBLd1JIOUlZQ3NIV282b0RkUA==';
-  const apiUrl = 'https://api.countrystatecity.in/v1';
+  const apiKey = "dFhVY0dLQnU3ckdyNVNsb1VsMWZTenBLd1JIOUlZQ3NIV282b0RkUA==";
+  const apiUrl = "https://api.countrystatecity.in/v1";
 
   useEffect(() => {
     // Fetch countries
     axios
       .get(`${apiUrl}/countries`, {
-        headers: { 'X-CSCAPI-KEY': apiKey },
+        headers: { "X-CSCAPI-KEY": apiKey },
       })
       .then((response) => setCountries(response.data))
-      .catch((error) => console.error('Error fetching countries:', error));
+      .catch((error) => console.error("Error fetching countries:", error));
   }, []);
 
   useEffect(() => {
@@ -29,10 +29,10 @@ const CountryStateCityDropdown = () => {
       // Fetch states when a country is selected
       axios
         .get(`${apiUrl}/countries/${selectedCountry}/states`, {
-          headers: { 'X-CSCAPI-KEY': apiKey },
+          headers: { "X-CSCAPI-KEY": apiKey },
         })
         .then((response) => setStates(response.data))
-        .catch((error) => console.error('Error fetching states:', error));
+        .catch((error) => console.error("Error fetching states:", error));
     } else {
       setStates([]);
       setCities([]);
@@ -43,11 +43,14 @@ const CountryStateCityDropdown = () => {
     if (selectedState) {
       // Fetch cities when a state is selected
       axios
-        .get(`${apiUrl}/countries/${selectedCountry}/states/${selectedState}/cities`, {
-          headers: { 'X-CSCAPI-KEY': apiKey },
-        })
+        .get(
+          `${apiUrl}/countries/${selectedCountry}/states/${selectedState}/cities`,
+          {
+            headers: { "X-CSCAPI-KEY": apiKey },
+          },
+        )
         .then((response) => setCities(response.data))
-        .catch((error) => console.error('Error fetching cities:', error));
+        .catch((error) => console.error("Error fetching cities:", error));
     } else {
       setCities([]);
     }

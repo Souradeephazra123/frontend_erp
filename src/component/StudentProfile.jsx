@@ -11,7 +11,7 @@ function StudentProfile() {
     const fetchStudentData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_API_URL}/newstudent/${id}`
+          `${process.env.REACT_APP_BASE_API_URL}/newstudent/${id}`,
         );
         const data = response.data;
         console.log(data);

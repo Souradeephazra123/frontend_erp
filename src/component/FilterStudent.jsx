@@ -18,7 +18,7 @@ const StudentCounts = () => {
       const id = localStorage.getItem("selectedSchool");
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
         );
         setClasses(response.data);
       } catch (error) {
@@ -36,7 +36,7 @@ const StudentCounts = () => {
       if (selectedClass) {
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`,
           );
           setDivisions(response.data);
         } catch (error) {
@@ -67,7 +67,7 @@ const StudentCounts = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}${endpoint}`
+        `${process.env.REACT_APP_BASE_API_URL}${endpoint}`,
       );
       setData(response.data);
       setError("");
@@ -84,7 +84,7 @@ const StudentCounts = () => {
     });
     saveAs(
       blob,
-      `${filterType}-counts-${selectedClass}-${selectedDivision}.json`
+      `${filterType}-counts-${selectedClass}-${selectedDivision}.json`,
     );
   };
 
@@ -99,7 +99,7 @@ const StudentCounts = () => {
           <tr key={gender}>
             <td className="p-4 border">Total {gender} students</td>
             <td className="p-4 border">{count}</td>
-          </tr>
+          </tr>,
         );
       });
     }
@@ -112,7 +112,7 @@ const StudentCounts = () => {
               Total students in {category} category
             </td>
             <td className="p-4 border">{count}</td>
-          </tr>
+          </tr>,
         );
       });
     }
@@ -125,7 +125,7 @@ const StudentCounts = () => {
               Total students in {hostelType} hostel
             </td>
             <td className="p-4 border">{count}</td>
-          </tr>
+          </tr>,
         );
       });
     }

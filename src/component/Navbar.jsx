@@ -2,8 +2,6 @@ import React, { useState } from "react";
 // import { CgProfile } from "react-icons/cg";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
-
-
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,19 +22,32 @@ function Navbar() {
         {/* <CgProfile className="w-8 h-8" /> */}
         <p className=" w-8 h-8 bg-gray-200 rounded-full"></p>
         <h1 className=" font-[roboto] text-2xl font-semibold t">ERP</h1>
-        
       </div>
       {/* Right */}
       <div className="hidden md:flex gap-24  text-xl font-[roboto]   flex-1 justify-center">
         <h2 className="hover:text-[#412249] cursor-pointer">Home</h2>
-        <h2 className="hover:text-[#412249] cursor-pointer">  Certificates</h2>
+        <h2 className="hover:text-[#412249] cursor-pointer"> Certificates</h2>
         <h2 className="hover:text-[#412249] cursor-pointer">Fees</h2>
         <h2 className="hover:text-[#412249] cursor-pointer">Profile</h2>
       </div>
       <div className="md:hidden flex items-center">
-        <button onClick={toggleMenu} className="text-[#8614a2] focus:outline-none">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+        <button
+          onClick={toggleMenu}
+          className="text-[#8614a2] focus:outline-none"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16m-7 6h7"
+            />
           </svg>
         </button>
       </div>
@@ -53,25 +64,6 @@ function Navbar() {
 }
 
 export default Navbar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState } from "react";
 // import { CgProfile } from "react-icons/cg";

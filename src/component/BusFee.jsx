@@ -11,7 +11,7 @@ const BusFee = () => {
     const fetchBusRoutes = async () => {
       try {
         const response = await fetch(
-          "https://erp.api.mindgrowthacademy.com/api/bus-routes"
+          `${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`,
         );
         const data = await response.json();
         setBusRoutes(data);

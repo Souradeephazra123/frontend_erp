@@ -18,7 +18,7 @@ const CertificateRequests = () => {
     const fetchRequests = async () => {
       try {
         const response = await axios.get(
-          "https://erp.api.mindgrowthacademy.com/api/certificates"
+          `${process.env.REACT_APP_BASE_API_URL}/api/certificates`,
         );
         setRequests(response.data.data);
         setLoading(false);
@@ -44,8 +44,8 @@ const CertificateRequests = () => {
       console.log(formData);
 
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/certificates",
-        formData
+        `${process.env.REACT_APP_BASE_API_URL}/api/certificates`,
+        formData,
       );
       setRequests([...requests, response.data.data]);
       setFormData({

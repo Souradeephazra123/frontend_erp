@@ -11,7 +11,7 @@ const FeeCategoryComponent = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        `https://erp.api.mindgrowthacademy.com/api/fee-categories`
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-categories`,
       );
       setCategories(response.data);
     } catch (error) {
@@ -23,8 +23,8 @@ const FeeCategoryComponent = () => {
   const createCategory = async () => {
     try {
       const response = await axios.post(
-        `https://erp.api.mindgrowthacademy.com/api/fee-categories`,
-        { category_name: categoryName }
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-categories`,
+        { category_name: categoryName },
       );
       setCategories([...categories, response.data]);
       setCategoryName("");
@@ -39,12 +39,12 @@ const FeeCategoryComponent = () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_API_URL}/api/fee-categories/${categoryId}`,
-        { category_name: categoryName }
+        { category_name: categoryName },
       );
       setCategories(
         categories.map((category) =>
-          category.category_id === categoryId ? response.data : category
-        )
+          category.category_id === categoryId ? response.data : category,
+        ),
       );
       setEditCategoryId(null); // Clear editing state
       setCategoryName(""); // Reset input field

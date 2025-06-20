@@ -34,11 +34,11 @@ const FileUploader = () => {
 
     try {
       const response = await fetch(
-        "https://erp.api.mindgrowthacademy.com/students/mass-upload",
+        `${process.env.REACT_APP_BASE_API_URL}/students/mass-upload`,
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
 
       if (response.ok) {

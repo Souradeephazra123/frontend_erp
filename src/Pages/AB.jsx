@@ -5,8 +5,7 @@
 // // function BonafideCertificatePreview({ formData }) {
 // //   return (
 // //     <div id="preview-content"  className="font-[roboto] m-12 p-8  text-black  bg-white mx-56 py-4 border-[8px] relative">
-     
-     
+
 // //      <div className="flex flex-col sm:flex-row py-4 items-center justify-center relative z-10">
 // //         <div className="w-52 h-52">
 // //           <img src={logoLeft} alt="School Logo" loading="lazy" title="School Logo" className="object-contain h-full w-full" />
@@ -24,8 +23,6 @@
 // //           <img src={logoRight} alt="CBSE Logo" loading="lazy" title="CBSE Logo" className="object-contain h-full w-full" />
 // //         </div>
 // //       </div>
-
-
 
 // //       <div>
 // //         <h2 className="text-center font-semibold text-4xl">
@@ -88,50 +85,6 @@
 // // }
 
 // // export default BonafideCertificatePreview;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // import React, { useState } from "react";
 // // import logoLeft from "../img/1000077337-removebg-preview.png";
@@ -276,24 +229,6 @@
 // // }
 
 // // export default BonafideCertificatePreview;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React from "react";
 

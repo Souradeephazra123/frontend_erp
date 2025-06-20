@@ -18,7 +18,7 @@ const AddBusRoute = () => {
 
     try {
       const response = await fetch(
-        "https://erp.api.mindgrowthacademy.com/api/bus-routes",
+        `${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`,
         {
           method: "POST",
           headers: {
@@ -28,7 +28,7 @@ const AddBusRoute = () => {
             route_name: routeName,
             yearly_fee: yearlyFee,
           }),
-        }
+        },
       );
 
       if (response.ok) {

@@ -11,7 +11,7 @@ const PaymentApprovalList = () => {
     const fetchPaymentApprovals = async () => {
       try {
         const response = await axios.get(
-          "https://erp.api.mindgrowthacademy.com/api/paymentapproval"
+          `${process.env.REACT_APP_BASE_API_URL}/api/paymentapproval`,
         );
         if (
           response.data.message ===
@@ -36,15 +36,15 @@ const PaymentApprovalList = () => {
         {
           status: status,
           subcategory_id: sub_id, // Replace with the actual subcategory_id if needed
-        }
+        },
       );
       // Optionally, you can refresh the payment approvals after an update
       setPaymentApprovals((prev) =>
         prev.map((approval) =>
           approval.payment_approval_id === id
             ? { ...approval, payment_status: status }
-            : approval
-        )
+            : approval,
+        ),
       );
       alert(`Payment status updated to ${status}`);
     } catch (error) {
@@ -116,7 +116,7 @@ const PaymentApprovalList = () => {
                         updatePaymentStatus(
                           approval.payment_approval_id,
                           "Approved",
-                          approval.sub_id
+                          approval.sub_id,
                         )
                       }
                       className="bg-green-500 text-white py-1 px-3 rounded mr-2 hover:bg-green-600"
@@ -128,7 +128,7 @@ const PaymentApprovalList = () => {
                         updatePaymentStatus(
                           approval.payment_approval_id,
                           "Rejected",
-                          approval.sub_id
+                          approval.sub_id,
                         )
                       }
                       className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"

@@ -22,7 +22,7 @@ const Attendance = () => {
       new Date(record.date).toLocaleString("default", {
         month: "long",
         year: "numeric",
-      })
+      }),
     );
     return [...new Set(months)]; // Get unique months
   };
@@ -42,7 +42,7 @@ const Attendance = () => {
       const id = localStorage.getItem("selectedSchool");
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
         );
         const data = await response.json();
 
@@ -60,7 +60,7 @@ const Attendance = () => {
       if (selectedClass) {
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`,
           );
           const data = await response.json();
 
@@ -92,7 +92,7 @@ const Attendance = () => {
                 divisionid: selectedSection,
                 date: date, // Include the date in the request
               }),
-            }
+            },
           );
 
           if (!response.ok) {
@@ -119,7 +119,7 @@ const Attendance = () => {
   // Toggle attendance status
   const handleStatusToggle = async (studentId) => {
     const currentStudent = attendanceData.find(
-      (student) => student.student_id === studentId
+      (student) => student.student_id === studentId,
     );
 
     if (currentStudent) {
@@ -137,14 +137,14 @@ const Attendance = () => {
 
       try {
         const response = await fetch(
-          "https://erp.api.mindgrowthacademy.com/api/attendance/markattendance",
+          `${process.env.REACT_APP_BASE_API_URL}/api/attendance/markattendance`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(requestData),
-          }
+          },
         );
 
         if (!response.ok) {
@@ -156,8 +156,8 @@ const Attendance = () => {
           prevData.map((student) =>
             student.student_id === studentId
               ? { ...student, status: updatedStatus }
-              : student
-          )
+              : student,
+          ),
         );
       } catch (error) {
         console.error("Error updating attendance status:", error);
@@ -167,12 +167,12 @@ const Attendance = () => {
 
   // Filter attendance data based on the search term
   const filteredAttendanceData = attendanceData.filter((student) =>
-    student.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+    student.fullName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   const handleAttendanceDetails = async (id) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_API_URL}/api/attendance/getattendance/${id}`
+        `${process.env.REACT_APP_BASE_API_URL}/api/attendance/getattendance/${id}`,
       );
       const data = await response.json();
       console.log(data);
@@ -414,7 +414,7 @@ const Attendance = () => {
                         <option key={month} value={month}>
                           {month}
                         </option>
-                      )
+                      ),
                     )}
                   </select>
                 </div>
@@ -506,7 +506,7 @@ const Attendance = () => {
             <span className="text-indigo-600">
               {
                 filteredAttendanceData.filter(
-                  (student) => student.status === "Present"
+                  (student) => student.status === "Present",
                 ).length
               }
             </span>

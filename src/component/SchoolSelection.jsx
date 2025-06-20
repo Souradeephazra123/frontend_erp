@@ -16,7 +16,7 @@ const SchoolSelection = () => {
     const fetchSchools = async () => {
       try {
         const response = await axios.get(
-          "https://erp.api.mindgrowthacademy.com/api/school"
+          `${process.env.REACT_APP_BASE_API_URL}/api/school`,
         );
         setSchools(response.data);
         setFilteredSchools(response.data);
@@ -41,7 +41,7 @@ const SchoolSelection = () => {
     const value = e.target.value;
     setSearchTerm(value);
     const filtered = schools.filter((school) =>
-      school.Name.toLowerCase().includes(value.toLowerCase())
+      school.Name.toLowerCase().includes(value.toLowerCase()),
     );
     setFilteredSchools(filtered);
   };

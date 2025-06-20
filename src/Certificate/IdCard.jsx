@@ -44,11 +44,11 @@ function IdCard() {
       const encodedImageUrl = encodeURI(
         student.photo.startsWith("/")
           ? `${window.location.origin}${student.photo}`
-          : student.photo
+          : student.photo,
       );
       console.log(student.photo);
 
-      setProfileImg("https://erp.api.mindgrowthacademy.com" + student.photo);
+      setProfileImg(`${process.env.REACT_APP_BASE_API_URL}` + student.photo);
     }
   }, [student]);
 

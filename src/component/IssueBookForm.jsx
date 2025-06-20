@@ -18,7 +18,7 @@ const IssueBookForm = ({ onBookIssued }) => {
     const fetchStudents = async () => {
       try {
         const response = await axios.get(
-          "https://erp.api.mindgrowthacademy.com/allstudents"
+          `${process.env.REACT_APP_BASE_API_URL}/allstudents`,
         );
         console.log(response.data.student);
         setStudents(response.data.student); // Assuming your API returns a list of students

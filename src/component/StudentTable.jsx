@@ -31,7 +31,7 @@ const StudentTable = () => {
       const id = localStorage.getItem("selectedSchool");
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
         );
         setClasses(response.data);
       } catch (error) {
@@ -47,7 +47,7 @@ const StudentTable = () => {
       if (selectedClass) {
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`,
           );
           setDivisions(response.data);
         } catch (error) {
@@ -65,7 +65,7 @@ const StudentTable = () => {
       if (selectedClass && selectedDivision && selectedFilterValue) {
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/students/${selectedClass}/${selectedDivision}/${selectedFilterValue}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/students/${selectedClass}/${selectedDivision}/${selectedFilterValue}`,
           );
           let studentData = response.data;
 

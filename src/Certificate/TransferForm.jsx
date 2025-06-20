@@ -56,7 +56,7 @@ function TransferForm() {
     const fetch = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_API_URL}/newstudent/${id}`
+          `${process.env.REACT_APP_BASE_API_URL}/newstudent/${id}`,
         );
         const data = response.data;
 
@@ -178,7 +178,7 @@ function TransferForm() {
                     />
                   )}
                 </div>
-              )
+              ),
           )}
           {formData.subjects.map((subject, index) => (
             <div key={index} className="px-2">

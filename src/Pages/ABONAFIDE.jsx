@@ -1,5 +1,3 @@
-
-
 // // import React from "react";
 // // import logoLeft from "../img/1000077337-removebg-preview.png";
 // // import logoRight from "../img/cbse-logo-46D5A6B556-seeklogo.com.png";
@@ -70,7 +68,7 @@
 // //           ></div>
 // //         </div>
 // //         <div className="relative z-10 mt-6 ml-32  text-xl">
-  
+
 // //           <p className="  m-4">
 // //             <strong> This is to clarify that The</strong>
 // //             <span>____________________</span> <strong>is a BONAFIDE </strong>
@@ -108,51 +106,6 @@
 // // }
 
 // // export default ABONAFIDE;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState } from 'react';
 // import logoLeft from "../img/1000077337-removebg-preview.png";
@@ -358,72 +311,23 @@
 
 // export default ABONAFIDE;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import React, { useState } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import BonafideCertificatePreview from './AB';
+import React, { useState } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import BonafideCertificatePreview from "./AB";
 
 function BonafideCertificateForm() {
   const [formData, setFormData] = useState({
-    studentName: '',
-    studyingYear: '',
-    date: '',
-    birthDate: '',
-    birthDateInWords: '',
-    birthPlace: '',
-    caste: '',
-    reason: '',
-    certificateNo: '',
-    regdNo: ''
+    studentName: "",
+    studyingYear: "",
+    date: "",
+    birthDate: "",
+    birthDateInWords: "",
+    birthPlace: "",
+    caste: "",
+    reason: "",
+    certificateNo: "",
+    regdNo: "",
     // place: ''
     // date: '',
   });
@@ -440,34 +344,40 @@ function BonafideCertificateForm() {
   };
 
   const handleDownload = () => {
-    const input = document.getElementById('preview-content');
+    const input = document.getElementById("preview-content");
     html2canvas(input, { scale: 3 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('Bonafide_Certificate.pdf');
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("Bonafide_Certificate.pdf");
     });
   };
 
   return (
-    <div className='text-white bg-[#412249] min-h-screen font-[roboto]'>
-      <div className='pt-20'>
-        <h2 className='text-3xl font-semibold text-center'>Bonafide Certificate Details</h2>
-        <p className='text-center'>Enter the required information for the certificate</p>
+    <div className="text-white bg-[#412249] min-h-screen font-[roboto]">
+      <div className="pt-20">
+        <h2 className="text-3xl font-semibold text-center">
+          Bonafide Certificate Details
+        </h2>
+        <p className="text-center">
+          Enter the required information for the certificate
+        </p>
       </div>
 
-      <div className='mt-8 md:mt-16 container mx-auto'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-12 max-w-lg lg:max-w-6xl mx-auto'>
+      <div className="mt-8 md:mt-16 container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-lg lg:max-w-6xl mx-auto">
           {Object.keys(formData).map((key) => (
-            <div key={key} className='px-2'>
-              <label className='text-white mb-2 capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</label>
+            <div key={key} className="px-2">
+              <label className="text-white mb-2 capitalize">
+                {key.replace(/([A-Z])/g, " $1").trim()}
+              </label>
               <input
-                type='text'
+                type="text"
                 name={key}
-                placeholder={`Enter ${key.replace(/([A-Z])/g, ' $1').trim()}`}
-                className='p-2 text-black rounded focus:outline-none cursor-pointer w-full'
+                placeholder={`Enter ${key.replace(/([A-Z])/g, " $1").trim()}`}
+                className="p-2 text-black rounded focus:outline-none cursor-pointer w-full"
                 value={formData[key]}
                 onChange={handleChange}
               />
@@ -476,20 +386,26 @@ function BonafideCertificateForm() {
         </div>
       </div>
 
-      <div className='flex flex-col md:flex-row justify-center p-8 text-white mt-20'>
-        <button className='bg-[#744881] px-8 py-2 rounded-md mx-4 mt-2 md:mt-0' onClick={handlePreview}>
+      <div className="flex flex-col md:flex-row justify-center p-8 text-white mt-20">
+        <button
+          className="bg-[#744881] px-8 py-2 rounded-md mx-4 mt-2 md:mt-0"
+          onClick={handlePreview}
+        >
           Preview
         </button>
         {showPreview && (
-          <button className='bg-[#744881] px-8 py-2 rounded-md mx-4 mt-2 md:mt-0' onClick={handleDownload}>
+          <button
+            className="bg-[#744881] px-8 py-2 rounded-md mx-4 mt-2 md:mt-0"
+            onClick={handleDownload}
+          >
             Download PDF
           </button>
         )}
       </div>
 
-      <h3 className='text-xl mt-12 text-center font-semibold mb-4'>Preview</h3>
+      <h3 className="text-xl mt-12 text-center font-semibold mb-4">Preview</h3>
 
-      <div className='pb-32'>
+      <div className="pb-32">
         {showPreview && <BonafideCertificatePreview formData={formData} />}
       </div>
     </div>

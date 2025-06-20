@@ -16,7 +16,7 @@ const DailyReportTable = () => {
     const fetchReports = async () => {
       try {
         const response = await axios.get(
-          "https://erp.api.mindgrowthacademy.com/api/revenue"
+          `${process.env.REACT_APP_BASE_API_URL}/api/revenue`,
         );
         setReports(response.data);
       } catch (err) {
@@ -30,7 +30,7 @@ const DailyReportTable = () => {
   useEffect(() => {
     if (selectedMonth) {
       const filtered = reports.filter((report) =>
-        new Date(report.date).toISOString().startsWith(selectedMonth)
+        new Date(report.date).toISOString().startsWith(selectedMonth),
       );
       setFilteredReports(filtered);
     } else {
@@ -49,7 +49,7 @@ const DailyReportTable = () => {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedReports = filteredReports.slice(
     startIndex,
-    startIndex + rowsPerPage
+    startIndex + rowsPerPage,
   );
 
   const handleNextPage = () => {

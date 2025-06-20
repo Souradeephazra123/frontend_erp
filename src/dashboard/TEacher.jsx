@@ -16,17 +16,17 @@ const Teacher = () => {
     }
     try {
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/attendance/staff",
+        `${process.env.REACT_APP_BASE_API_URL}/api/attendance/staff`,
         {
           date: selectedDate,
-        }
+        },
       );
       console.log(response);
       setAttendanceData(response.data.attendance || []);
     } catch (error) {
       console.error(
         "Failed to fetch teachers:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   };
@@ -35,11 +35,11 @@ const Teacher = () => {
   const handleStatusToggle = async (teacherId) => {
     try {
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/attendance/markstaffattendance",
+        `${process.env.REACT_APP_BASE_API_URL}/api/attendance/markstaffattendance`,
         {
           staff_id: teacherId,
           date: selectedDate || new Date().toISOString().split("T")[0], // Include selected date
-        }
+        },
       );
 
       // Update local state with new attendance status
@@ -50,13 +50,13 @@ const Teacher = () => {
                 ...teacher,
                 status: teacher.status === "present" ? "absent" : "present",
               }
-            : teacher
-        )
+            : teacher,
+        ),
       );
     } catch (error) {
       console.error(
         "Error updating attendance status:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
       alert("Failed to update attendance. Please try again.");
     }
@@ -64,7 +64,7 @@ const Teacher = () => {
 
   // Filter teachers based on search input
   const filteredData = attendanceData.filter((teacher) =>
-    teacher.name.toLowerCase().includes(searchTerm.toLowerCase())
+    teacher.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const downloadExcel = () => {

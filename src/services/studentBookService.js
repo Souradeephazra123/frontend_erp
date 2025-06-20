@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://erp.api.mindgrowthacademy.com/api/studentbook";
+const BASE_URL = `${process.env.REACT_APP_BASE_API_URL}/api/studentbook`;
 
 export const getStudentBooks = async () => {
   const response = await axios.get(BASE_URL);

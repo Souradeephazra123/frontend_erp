@@ -94,7 +94,7 @@ const StudentForm = () => {
         setClassOptions(classes);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error)
+        console.error("Error fetching class and division options:", error),
       );
   }, []);
   const [busRoutes, setBusRoutes] = useState([]);
@@ -107,7 +107,7 @@ const StudentForm = () => {
         setBusRoutes(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error)
+        console.error("Error fetching class and division options:", error),
       );
   }, []);
   const [academicYear, setAcademicYear] = useState([]);
@@ -120,7 +120,7 @@ const StudentForm = () => {
         setAcademicYear(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error)
+        console.error("Error fetching class and division options:", error),
       );
   }, []);
   // Fetch divisions when the class is selected
@@ -130,7 +130,7 @@ const StudentForm = () => {
         console.log(formData.class_id);
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${formData.class_id}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${formData.class_id}`,
           );
           const data = await response.json();
           console.log(data);
@@ -219,13 +219,13 @@ const StudentForm = () => {
 
     try {
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/newstudent",
+        `${process.env.REACT_APP_BASE_API_URL}/newstudent`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       setFormData({

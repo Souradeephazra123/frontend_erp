@@ -30,7 +30,7 @@ const PromoteStudents = () => {
     if (selectedClass) {
       axios
         .get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`,
         )
         .then((response) => {
           setDivisions(response.data);
@@ -47,7 +47,7 @@ const PromoteStudents = () => {
     if (newClassId) {
       axios
         .get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${newClassId}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${newClassId}`,
         )
         .then((response) => {
           setNewDivisions(response.data);
@@ -64,7 +64,7 @@ const PromoteStudents = () => {
     if (selectedClass && selectedDivision) {
       axios
         .get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/students/${selectedClass}/${selectedDivision}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/students/${selectedClass}/${selectedDivision}`,
         )
         .then((response) => {
           setStudents(response.data);
@@ -81,7 +81,7 @@ const PromoteStudents = () => {
     if (newClassId) {
       axios
         .get(
-          `${process.env.REACT_APP_BASE_API_URL}/feesubcategories/${newClassId}`
+          `${process.env.REACT_APP_BASE_API_URL}/feesubcategories/${newClassId}`,
         )
         .then((response) => {
           setFeeSubcategories(response.data);
@@ -90,7 +90,7 @@ const PromoteStudents = () => {
           setFees((prevFees) =>
             response.data.map((sub) => {
               const existingFee = prevFees.find(
-                (fee) => fee.subcategory_id === sub.subcategory_id
+                (fee) => fee.subcategory_id === sub.subcategory_id,
               );
               return (
                 existingFee || {
@@ -98,7 +98,7 @@ const PromoteStudents = () => {
                   fee_amount: sub.fee_amount,
                 }
               );
-            })
+            }),
           );
         });
     }
@@ -107,7 +107,7 @@ const PromoteStudents = () => {
   // Handle student selection
   const handleStudentSelection = (id) => {
     setSelectedStudents((prev) =>
-      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id],
     );
   };
 
@@ -116,7 +116,7 @@ const PromoteStudents = () => {
     setFees((prev) =>
       prev.some((fee) => fee.subcategory_id === subcategoryId)
         ? prev.filter((fee) => fee.subcategory_id !== subcategoryId)
-        : [...prev, { subcategory_id: subcategoryId, fee_amount: amount }]
+        : [...prev, { subcategory_id: subcategoryId, fee_amount: amount }],
     );
   };
 
@@ -126,8 +126,8 @@ const PromoteStudents = () => {
       prev.map((fee) =>
         fee.subcategory_id === subcategoryId
           ? { ...fee, fee_amount: value }
-          : fee
-      )
+          : fee,
+      ),
     );
   };
 
@@ -152,8 +152,8 @@ const PromoteStudents = () => {
 
     try {
       await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/promote",
-        requestBody
+        `${process.env.REACT_APP_BASE_API_URL}/api/promote`,
+        requestBody,
       );
       alert("Students promoted successfully!");
       window.location.reload();
@@ -282,7 +282,7 @@ const PromoteStudents = () => {
                   type="checkbox"
                   className="mr-3"
                   checked={fees.some(
-                    (fee) => fee.subcategory_id === sub.subcategory_id
+                    (fee) => fee.subcategory_id === sub.subcategory_id,
                   )}
                   onChange={() =>
                     handleFeeSelection(sub.subcategory_id, sub.fee_amount)

@@ -14,7 +14,7 @@ const StaffHome = () => {
     const fetchStaffList = async () => {
       try {
         const response = await axios.get(
-          "https://erp.api.mindgrowthacademy.com/api/attendance/stafflist"
+          `${process.env.REACT_APP_BASE_API_URL}/api/attendance/stafflist`,
         );
         setStaffList(response.data);
       } catch (error) {
@@ -26,7 +26,7 @@ const StaffHome = () => {
   }, []);
 
   const filteredStaff = staffList.filter((staff) =>
-    staff.name.toLowerCase().includes(searchQuery.toLowerCase())
+    staff.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

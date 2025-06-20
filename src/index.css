@@ -2,41 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* idCertificate css */
 .hide-for-pdf {
-    display: none;
-  }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
+  display: none;
+}
 
 /* bonifite */
 .spacing {
@@ -54,7 +23,6 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 .modal {
   background-color: white;

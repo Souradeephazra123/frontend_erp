@@ -25,8 +25,8 @@ const StaffForm = () => {
     try {
       // Update the API endpoint to the correct one
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/attendance/addsinglestaff",
-        formData
+        `${process.env.REACT_APP_BASE_API_URL}/api/attendance/addsinglestaff`,
+        formData,
       );
       // Check if response is successful and show alert
       if (response.status === 200) {

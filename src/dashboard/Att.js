@@ -12,7 +12,7 @@ const Attendance = () => {
   useEffect(() => {
     // Fetch students on component mount
     axios
-      .get("https://erp.api.mindgrowthacademy.com/st")
+      .get(`${process.env.REACT_APP_BASE_API_URL}/st`)
       .then((response) => setStudents(response.data))
       .catch((error) => console.error("Error fetching students:", error));
   }, []);
@@ -28,7 +28,7 @@ const Attendance = () => {
     };
 
     axios
-      .post("https://erp.api.mindgrowthacademy.com/api/att", attendanceData)
+      .post(`${process.env.REACT_APP_BASE_API_URL}/api/att`, attendanceData)
       .then(() => alert("Attendance marked successfully"))
       .catch((error) => console.error("Error marking attendance:", error));
   };

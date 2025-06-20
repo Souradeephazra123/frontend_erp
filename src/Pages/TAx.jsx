@@ -6,7 +6,7 @@ function TAx() {
 
   useEffect(() => {
     // Fetch staff data from API
-    fetch("https://erp.api.mindgrowthacademy.com/api/class/staff")
+    fetch(`${process.env.REACT_APP_BASE_API_URL}/api/class/staff`)
       .then((response) => response.json())
       .then((data) => {
         setStaffData(data);

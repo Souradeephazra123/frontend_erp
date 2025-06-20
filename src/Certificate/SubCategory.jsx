@@ -18,7 +18,7 @@ const FeeSubCategoryComponent = () => {
     const id = localStorage.getItem("selectedSchool");
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories/school/${id}`
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories/school/${id}`,
       );
       console.log(response.data);
       setSubCategories(response.data);
@@ -36,7 +36,7 @@ const FeeSubCategoryComponent = () => {
         setAcademicYear(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error)
+        console.error("Error fetching class and division options:", error),
       );
   }, []);
 
@@ -44,7 +44,7 @@ const FeeSubCategoryComponent = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "https://erp.api.mindgrowthacademy.com/api/fee-categories"
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-categories`,
       );
       setCategories(response.data);
     } catch (error) {
@@ -57,7 +57,7 @@ const FeeSubCategoryComponent = () => {
     const id = localStorage.getItem("selectedSchool");
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
+        `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
       );
       setClasses(response.data);
     } catch (error) {
@@ -86,8 +86,8 @@ const FeeSubCategoryComponent = () => {
   const createSubCategory = async (data) => {
     try {
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/fee-subcategories",
-        data
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories`,
+        data,
       );
       setSubCategories([...subcategories, response.data]);
       setSubCategoryName("");
@@ -105,14 +105,14 @@ const FeeSubCategoryComponent = () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories/${subcategoryId}`,
-        data
+        data,
       );
       setSubCategories(
         subcategories.map((subcategory) =>
           subcategory.subcategory_id === subcategoryId
             ? response.data
-            : subcategory
-        )
+            : subcategory,
+        ),
       );
       setEditSubCategoryId(null);
       setSubCategoryName("");

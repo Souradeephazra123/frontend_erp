@@ -19,7 +19,7 @@ const StudentDetails = () => {
     setError(null);
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}/newStudent/${id}`
+        `${process.env.REACT_APP_BASE_API_URL}/newStudent/${id}`,
       );
       setStudentDetails(response.data.student);
       setOriginalStudentDetails(response.data.student); // Store the original data
@@ -84,8 +84,8 @@ const StudentDetails = () => {
     // Send only the updated fields
     try {
       const response = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/updateStudent",
-        updatedFields
+        `${process.env.REACT_APP_BASE_API_URL}/updateStudent`,
+        updatedFields,
       );
       alert(response.data.message);
     } catch (err) {

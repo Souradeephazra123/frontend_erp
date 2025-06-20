@@ -18,7 +18,7 @@ const FeePayment = () => {
     const fetchRoutes = async () => {
       try {
         const response = await fetch(
-          "https://erp.api.mindgrowthacademy.com/api/bus-routes"
+          `${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`,
         );
         const data = await response.json();
         setRoutes(data);
@@ -36,7 +36,7 @@ const FeePayment = () => {
       if (!selectedRoute) return;
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`,
         );
         const data = await response.json();
         if (data.length === 0) {
@@ -66,7 +66,7 @@ const FeePayment = () => {
     });
     try {
       const response = await fetch(
-        "https://erp.api.mindgrowthacademy.com/api/fee-collection",
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-collection`,
         {
           method: "POST",
           headers: {
@@ -78,7 +78,7 @@ const FeePayment = () => {
             paid_amount: paidAmount,
             payment_month: monthName, // Sending month with the fee payment
           }),
-        }
+        },
       );
 
       if (response.ok) {

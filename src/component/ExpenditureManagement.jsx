@@ -21,7 +21,7 @@ const ExpenditureManagement = () => {
   const fetchExpenditures = async () => {
     try {
       const response = await axios.get(
-        "https://erp.api.mindgrowthacademy.com/api/expenditure"
+        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure`,
       );
       setExpenditures(response.data);
     } catch (error) {
@@ -35,7 +35,7 @@ const ExpenditureManagement = () => {
       try {
         await axios.put(
           `${process.env.REACT_APP_BASE_API_URL}/api/expenditure/${editingExpenditure.id}`,
-          newExpenditure
+          newExpenditure,
         );
         fetchExpenditures();
         resetForm();
@@ -46,8 +46,8 @@ const ExpenditureManagement = () => {
       // Add new expenditure
       try {
         await axios.post(
-          "https://erp.api.mindgrowthacademy.com/api/expenditure",
-          newExpenditure
+          `${process.env.REACT_APP_BASE_API_URL}/api/expenditure`,
+          newExpenditure,
         );
         fetchExpenditures();
         resetForm();
@@ -71,7 +71,7 @@ const ExpenditureManagement = () => {
   const handleDeleteExpenditure = async (id) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure/${id}`
+        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure/${id}`,
       );
       fetchExpenditures();
     } catch (error) {

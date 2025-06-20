@@ -17,7 +17,7 @@ const StudentTable = () => {
       const id = localStorage.getItem("selectedSchool");
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
         );
         setClasses(response.data);
       } catch (error) {
@@ -34,7 +34,7 @@ const StudentTable = () => {
       if (selectedClass) {
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${selectedClass}`,
           );
           setDivisions(response.data);
         } catch (error) {
@@ -52,7 +52,7 @@ const StudentTable = () => {
       if (selectedClass && selectedDivision) {
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/students/${selectedClass}/${selectedDivision}`
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/students/${selectedClass}/${selectedDivision}`,
           );
           console.log(selectedClass, selectedDivision);
           setStudents(response.data);
@@ -72,7 +72,7 @@ const StudentTable = () => {
       formData.append("photo", file);
       formData.append("id", studentId); // Add the student ID to the form data
 
-      fetch("https://erp.api.mindgrowthacademy.com/api/upload-photo", {
+      fetch(`${process.env.REACT_APP_BASE_API_URL}/api/upload-photo`, {
         method: "POST",
         body: formData,
       })

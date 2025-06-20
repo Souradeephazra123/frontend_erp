@@ -29,16 +29,12 @@
 // //           </div>
 // //         </div>
 
-
-
-
-// // <div 
+// // <div
 // //  style={{
 // //   backgroundImage: `url(${logoLeft})`,
 // //   backgroundSize: 'center',
 // //   backgroundPosition: 'center',
 
- 
 // // }}
 // // >
 // //   <div className=" p-1   w-60 mt-12 bg-blue-700 rounded-tr-xl">
@@ -49,7 +45,7 @@
 
 // //     </div>
 // //     <div className=" mx-12 mt-2  text-lg  font-semibold">
-// //       <p className="">Name <span className=" px-[108px]">:</span> </p> 
+// //       <p className="">Name <span className=" px-[108px]">:</span> </p>
 // //       <p>Date of Birth <span className=" px-[53px]">:</span> </p>
 // //       <p>Parent's Name  <span className=" px-10">:</span></p>
 // //       <p>Phone No.  <span className=" px-[70px]">:</span></p>
@@ -57,12 +53,6 @@
 // //     </div>
 // //   </div>
 // // </div>
-
-
-
-
-
-
 
 // //         <div className="w-full  h-62 mt-2">
 // //           <img src={down} className="w-full h-full object-cover" alt="error" loading='lazy' title='logoLt' />
@@ -73,20 +63,6 @@
 // // }
 
 // // export default Aid;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import logoLeft from "../img/1000077337-removebg-preview.png";
 // import up from '../img/up.png';
@@ -155,60 +131,6 @@
 
 // export default Aid;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import React from 'react';
 // import logoLeft from "../img/1000077337-removebg-preview.png";
 // import up from '../img/up.png';
@@ -240,7 +162,7 @@
 //               <a href="mailto:induraenglishschool@gmail.com" className='mx-4'>Email: induraenglishschool@gmail.com</a>
 //             </div>
 //           </div>
-         
+
 //         </div>
 
 //         <div className="relative  mt-12">
@@ -262,7 +184,7 @@
 //               {profileImg && <img src={profileImg} alt='Profile' className='w-full h-full rounded-xl' style={{ objectFit: 'cover' }} />}
 //             </div>
 //             <div className="mx-24 flex  justify-center   flex-col mt-2 font-[roboto] text-black text-lg ">
-//               <p>Name  :  
+//               <p>Name  :
 //                 <span className=' m-4 '>{fullName}</span></p>
 //               <p>Date of Birth : <span className=' m-3 '>{dob}</span></p>
 //               <p>Parent's Name :  <span className='m-3 '>{fathersName}</span></p>
@@ -283,20 +205,3 @@
 // }
 
 // export default Aid;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

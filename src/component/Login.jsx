@@ -17,8 +17,8 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "https://erp.api.mindgrowthacademy.com/api/auth/login",
-        value
+        `${process.env.REACT_APP_BASE_API_URL}/api/auth/login`,
+        value,
       );
       console.log("Login response:", res);
 
