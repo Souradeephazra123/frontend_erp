@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* idCertificate css */
+.hide-for-pdf {
+    display: none;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* bonifite */
+.spacing {
+  word-spacing: 0.2rem; /* Adjust the value to your preference */
+  letter-spacing: 0.05rem; /* Adjust the value to your preference */
+}
+
+/* id card */
+/* src/index.css or src/styles/global.css */
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.modal {
+  background-color: white;
+  width: 80%;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  top: 20%;
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
