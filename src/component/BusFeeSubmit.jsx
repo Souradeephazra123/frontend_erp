@@ -18,7 +18,7 @@ const FeePayment = () => {
     const fetchRoutes = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`
         );
         const data = await response.json();
         setRoutes(data);
@@ -36,7 +36,7 @@ const FeePayment = () => {
       if (!selectedRoute) return;
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`
         );
         const data = await response.json();
         if (data.length === 0) {
@@ -78,7 +78,7 @@ const FeePayment = () => {
             paid_amount: paidAmount,
             payment_month: monthName, // Sending month with the fee payment
           }),
-        },
+        }
       );
 
       if (response.ok) {
@@ -207,7 +207,23 @@ const FeePayment = () => {
                 type="month"
                 id="month"
                 value={month}
-                onChange={(e) => setMonth(e.target.value)}
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  const selectedMonth =
+                    new Date(selectedValue + "-01").getMonth() + 1; // Get month (1-12)
+
+                  if (selectedMonth === 4 || selectedMonth === 5) {
+                    // April = 4, May = 5
+                    setMessage(
+                      "April and May are not available for fee collection. Please select another month."
+                    );
+                    return;
+                  }
+
+                  console.log(selectedValue);
+                  setMonth(selectedValue);
+                  setMessage(""); // Clear any previous error message
+                }}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>

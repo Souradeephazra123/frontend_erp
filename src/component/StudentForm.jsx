@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Select from "react-select";
 import "tailwindcss/tailwind.css";
 import { useNavigate } from "react-router-dom";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 import Header from "../dashboard/Header";
 
 const StudentForm = () => {
   const nav = useNavigate();
   const [checkCountry, setShowCountry] = useState();
+  const [showPreview, setShowPreview] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const previewRef = useRef();
   const [formData, setFormData] = useState({
     file: "",
     academic_year: "",
@@ -94,7 +99,7 @@ const StudentForm = () => {
         setClassOptions(classes);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error),
+        console.error("Error fetching class and division options:", error)
       );
   }, []);
   const [busRoutes, setBusRoutes] = useState([]);
@@ -107,7 +112,7 @@ const StudentForm = () => {
         setBusRoutes(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error),
+        console.error("Error fetching class and division options:", error)
       );
   }, []);
   const [academicYear, setAcademicYear] = useState([]);
@@ -120,7 +125,7 @@ const StudentForm = () => {
         setAcademicYear(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error),
+        console.error("Error fetching class and division options:", error)
       );
   }, []);
   // Fetch divisions when the class is selected
@@ -130,7 +135,7 @@ const StudentForm = () => {
         console.log(formData.class_id);
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${formData.class_id}`,
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${formData.class_id}`
           );
           const data = await response.json();
           console.log(data);
@@ -149,11 +154,11 @@ const StudentForm = () => {
   useEffect(() => {
     // Fetch countries
     axios
-      .get("https://restcountries.com/v2/all")
+      .get("https://restcountries.com/v3.1/all?fields=name")
       .then((response) => {
         const countries = response.data.map((country) => ({
-          value: country.name,
-          label: country.name,
+          value: country.name.common,
+          label: country.name.common,
         }));
         setFormData((prevData) => ({ ...prevData, countries }));
       })
@@ -225,9 +230,13 @@ const StudentForm = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
+      setIsSubmitted(true);
+      alert("Form submitted successfully!");
+
+      // Clear form data after successful submission
       setFormData({
         photo: "",
         academic_year: "",
@@ -274,11 +283,58 @@ const StudentForm = () => {
       });
       setImagePreview(null);
       setShowCountry(true);
-      alert("Form submitted successfully!");
-      window.location.reload();
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Fill all the required fields!");
+    }
+  };
+
+  const handlePreview = () => {
+    setShowPreview(true);
+  };
+
+  const generatePDF = async () => {
+    const element = previewRef.current;
+    if (!element) return;
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 3, // Increased scale for better quality
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        width: element.scrollWidth,
+        height: element.scrollHeight,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Save with better filename
+      const fileName = `${formData.first_name || "Student"}_${formData.last_name || "Admission"}_Form_${new Date().toISOString().split("T")[0]}.pdf`;
+      pdf.save(fileName);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
     }
   };
 
@@ -842,15 +898,480 @@ const StudentForm = () => {
           </div>
         </div>
 
-        <div className="mt-12 p-4   text-xl flex justify-center items-center   text-white  ">
+        <div className="mt-12 p-4 text-xl flex justify-center items-center gap-4 text-white">
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="w-1/4 bg-green-600 font-[roboto] py-2 px-4 rounded-md hover:bg-green-700"
+          >
+            Preview
+          </button>
           <button
             type="submit"
-            className=" w-1/3 bg-[#00307D] font-[roboto]    py-2 px-4 rounded-md "
+            className="w-1/3 bg-[#00307D] font-[roboto] py-2 px-4 rounded-md hover:bg-blue-800"
           >
             Submit
           </button>
+          {isSubmitted && (
+            <button
+              type="button"
+              onClick={generatePDF}
+              className="w-1/4 bg-red-600 font-[roboto] py-2 px-4 rounded-md hover:bg-red-700"
+            >
+              Download PDF
+            </button>
+          )}
         </div>
       </form>
+
+      {/* Preview Modal */}
+      {showPreview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">
+                Preview - Student Admission Form
+              </h2>
+              <button
+                onClick={() => setShowPreview(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div
+              ref={previewRef}
+              className="bg-white p-12 font-serif text-black max-w-4xl mx-auto"
+            >
+              {/* School Header with Logo */}
+              <div className="text-center mb-8 border-b-4 border-blue-800 pb-6">
+                <div className="flex justify-center items-center mb-4">
+                  <div className="w-16 h-16 bg-blue-800 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-xl">ERP</span>
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold text-blue-800 mb-1">
+                      ERP Mind Growth Academy
+                    </h1>
+                    <p className="text-lg text-gray-600">
+                      Excellence in Education
+                    </p>
+                  </div>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mt-4 bg-gray-100 py-2 px-4 rounded">
+                  STUDENT ADMISSION FORM
+                </h2>
+                <p className="text-base text-gray-700 mt-2 font-semibold">
+                  Academic Year:{" "}
+                  {academicYear.find(
+                    (year) => year.id === formData.academic_year
+                  )?.year || "N/A"}
+                </p>
+              </div>
+
+              {/* Student Basic Information Card */}
+              <div className="border-2 border-gray-300 rounded-lg p-6 mb-6 bg-gray-50">
+                <div className="flex gap-8">
+                  <div className="w-36 h-44 border-2 border-gray-400 bg-white flex justify-center items-center rounded-lg shadow-md">
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="Student"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div className="text-center text-gray-500">
+                        <div className="text-4xl mb-2">📷</div>
+                        <span className="text-sm">Student Photo</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <table className="w-full text-base">
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="font-bold py-2 w-1/3 text-gray-700">
+                            Student Name:
+                          </td>
+                          <td className="py-2 text-gray-900 font-semibold">
+                            {formData.first_name} {formData.middle_name}{" "}
+                            {formData.last_name}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="font-bold py-2 text-gray-700">
+                            Admission No:
+                          </td>
+                          <td className="py-2 text-gray-900 font-semibold">
+                            {formData.regdNo || "N/A"}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="font-bold py-2 text-gray-700">
+                            Class & Section:
+                          </td>
+                          <td className="py-2 text-gray-900 font-semibold">
+                            {classOptions.find(
+                              (cls) => cls.value === formData.class_id
+                            )?.label || "N/A"}{" "}
+                            -{" "}
+                            {divisionOptions.find(
+                              (div) => div.value === formData.division_id
+                            )?.label || "N/A"}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="font-bold py-2 text-gray-700">
+                            Date of Birth:
+                          </td>
+                          <td className="py-2 text-gray-900 font-semibold">
+                            {formData.dob || "N/A"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="font-bold py-2 text-gray-700">
+                            Gender:
+                          </td>
+                          <td className="py-2 text-gray-900 font-semibold">
+                            {formData.gender || "N/A"}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              {/* Personal Information Section */}
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-white bg-blue-700 py-3 px-4 rounded-t-lg">
+                  PERSONAL INFORMATION
+                </h3>
+                <div className="border-2 border-gray-300 border-t-0 rounded-b-lg p-4 bg-white">
+                  <table className="w-full text-base">
+                    <tbody>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Aadhar Number:
+                        </td>
+                        <td className="py-3 w-1/4 text-gray-900">
+                          {formData.uid_no || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Blood Group:
+                        </td>
+                        <td className="py-3 w-1/4 text-gray-900">
+                          {formData.blood_grp || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          Place of Birth:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.dob_place || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Religion:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.religion || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          Category:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.category || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Nationality:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.nationality || "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Student Type:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.student_type || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Hostel Type:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.hostelType || "N/A"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Family Information Section */}
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-white bg-green-700 py-3 px-4 rounded-t-lg">
+                  FAMILY INFORMATION
+                </h3>
+                <div className="border-2 border-gray-300 border-t-0 rounded-b-lg p-4 bg-white">
+                  <table className="w-full text-base">
+                    <tbody>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Father's Name:
+                        </td>
+                        <td className="py-3 w-1/4 text-gray-900">
+                          {formData.father_name || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Father's Aadhar:
+                        </td>
+                        <td className="py-3 w-1/4 text-gray-900">
+                          {formData.father_aadhar || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          Mother's Name:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.mother_name || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Mother's Aadhar:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.mother_aadhar || "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Guardian's Name:
+                        </td>
+                        <td
+                          className="py-3 text-gray-900 font-medium"
+                          colSpan="3"
+                        >
+                          {formData.guardian_name || "N/A"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Address Information Section */}
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-white bg-purple-700 py-3 px-4 rounded-t-lg">
+                  ADDRESS INFORMATION
+                </h3>
+                <div className="border-2 border-gray-300 border-t-0 rounded-b-lg p-4 bg-white">
+                  <table className="w-full text-base">
+                    <tbody>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Present Address:
+                        </td>
+                        <td className="py-3 w-3/4 text-gray-900" colSpan="3">
+                          {formData.present_address || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          Permanent Address:
+                        </td>
+                        <td className="py-3 text-gray-900" colSpan="3">
+                          {formData.permanent_address || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          City:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.city || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          District:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.district || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          State:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.state || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Country:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.country?.label || formData.country || "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Pincode:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.pincode || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Taluka:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.taluka || "N/A"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Contact & Transportation Section */}
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-white bg-orange-700 py-3 px-4 rounded-t-lg">
+                  CONTACT & TRANSPORTATION
+                </h3>
+                <div className="border-2 border-gray-300 border-t-0 rounded-b-lg p-4 bg-white">
+                  <table className="w-full text-base">
+                    <tbody>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Mobile Number:
+                        </td>
+                        <td className="py-3 w-1/4 text-gray-900">
+                          {formData.mobile_no || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 w-1/4 text-gray-700">
+                          Alternate Mobile:
+                        </td>
+                        <td className="py-3 w-1/4 text-gray-900">
+                          {formData.alternate_mobile_no || "N/A"}
+                        </td>
+                      </tr>
+                      <tr className="border-b">
+                        <td className="font-semibold py-3 text-gray-700">
+                          Email ID:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {formData.email_id || "N/A"}
+                        </td>
+                        <td className="font-semibold py-3 text-gray-700">
+                          Bus Route:
+                        </td>
+                        <td className="py-3 text-gray-900">
+                          {busRoutes.find(
+                            (route) => route.id === formData.bus_route
+                          )?.route_name || "N/A"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Identification Marks Section */}
+              {(formData.identification_mark_1 ||
+                formData.identification_mark_2) && (
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-white bg-red-700 py-3 px-4 rounded-t-lg">
+                    IDENTIFICATION MARKS
+                  </h3>
+                  <div className="border-2 border-gray-300 border-t-0 rounded-b-lg p-4 bg-white">
+                    <table className="w-full text-base">
+                      <tbody>
+                        <tr>
+                          <td className="font-semibold py-3 w-1/4 text-gray-700">
+                            Mark 1:
+                          </td>
+                          <td className="py-3 w-1/4 text-gray-900">
+                            {formData.identification_mark_1 || "N/A"}
+                          </td>
+                          <td className="font-semibold py-3 w-1/4 text-gray-700">
+                            Mark 2:
+                          </td>
+                          <td className="py-3 w-1/4 text-gray-900">
+                            {formData.identification_mark_2 || "N/A"}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Declaration and Signatures */}
+              <div className="mt-12 border-t-2 border-gray-400 pt-6">
+                <div className="bg-gray-100 p-4 rounded-lg mb-6">
+                  <h4 className="font-bold text-lg text-gray-800 mb-2">
+                    DECLARATION:
+                  </h4>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    I hereby declare that the above information is true and
+                    correct to the best of my knowledge. I understand that any
+                    false information may lead to the cancellation of admission.
+                  </p>
+                </div>
+
+                <div className="flex justify-between items-end mt-8">
+                  <div className="text-center">
+                    <p className="text-base font-semibold text-gray-700 mb-1">
+                      Date: {new Date().toLocaleDateString("en-IN")}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Application Submitted
+                    </p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="border-t-2 border-gray-400 w-48 mb-2"></div>
+                    <p className="text-base font-semibold text-gray-700">
+                      Parent/Guardian Signature
+                    </p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="border-t-2 border-gray-400 w-48 mb-2"></div>
+                    <p className="text-base font-semibold text-gray-700">
+                      School Authority Signature
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-center mt-8 p-4 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-800 font-medium">
+                    📧 For queries: admission@erpmindgrowth.edu | 📞 Contact:
+                    +91-XXXXXXXXXX
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center gap-4 mt-4">
+              <button
+                onClick={() => setShowPreview(false)}
+                className="bg-gray-500 text-white py-2 px-6 rounded-md hover:bg-gray-600"
+              >
+                Close
+              </button>
+              <button
+                onClick={generatePDF}
+                className="bg-red-600 text-white py-2 px-6 rounded-md hover:bg-red-700"
+              >
+                Download PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
