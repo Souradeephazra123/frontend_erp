@@ -1,58 +1,69 @@
 # Fee Reports System Documentation
 
 ## Overview
+
 The Fee Reports system provides comprehensive reporting capabilities for fee management in your ERP system. It supports multiple report types and filtering options for detailed fee analysis.
 
 ## Features
 
 ### 📊 **Report Types**
+
 1. **Individual Student Reports** - Detailed fee information for a specific student
 2. **Class-wise Reports** - Consolidated fee data for entire classes or sections
 
 ### 📅 **Filter Options**
+
 1. **Yearly Reports** - View fees for an entire academic year
 2. **Monthly Reports** - Focus on specific months within a year
 3. **Date Range Reports** - Custom date ranges for detailed analysis
 
 ### 📈 **Export Options**
+
 - **Excel Download** - Export detailed data in Excel format
 - **PDF Reports** - Professional PDF reports with summaries and charts
 
 ## How to Access
+
 Navigate to: `/fee-reports` in your application
 
 ## Usage Guide
 
 ### 1. **Configure Report Settings**
-   - Select **Report Type**: Individual Student or Class-wise
-   - Choose **Filter Type**: Yearly, Monthly, or Date Range
-   - Pick appropriate time periods
+
+- Select **Report Type**: Individual Student or Class-wise
+- Choose **Filter Type**: Yearly, Monthly, or Date Range
+- Pick appropriate time periods
 
 ### 2. **Student Reports**
-   - Select a specific student from the dropdown
-   - Choose your preferred time filter
-   - Click "Generate Report"
+
+- Select a specific student from the dropdown
+- Choose your preferred time filter
+- Click "Generate Report"
 
 ### 3. **Class Reports**
-   - Select a class from the dropdown
-   - Optionally select a specific section
-   - Choose your time filter
-   - Click "Generate Report"
+
+- Select a class from the dropdown
+- Optionally select a specific section
+- Choose your time filter
+- Click "Generate Report"
 
 ### 4. **View Results**
-   - **Summary Cards**: Quick overview of totals
-   - **Detailed Table**: Complete transaction records
-   - **Export Options**: Download Excel or PDF
+
+- **Summary Cards**: Quick overview of totals
+- **Detailed Table**: Complete transaction records
+- **Export Options**: Download Excel or PDF
 
 ## Summary Information Displayed
 
 ### 📋 **Summary Cards**
+
 - **Total Students**: Number of students in the report
 - **Total Amount**: Total fee amount for the period
 - **Amount Paid**: Total payments received
 - **Amount Due**: Outstanding balances
 
 ### 📋 **Detailed Records**
+
 - Student ID and Name
 - Class and Section
 - Fee Category and Subcategory
@@ -63,7 +74,9 @@ Navigate to: `/fee-reports` in your application
 ## Backend Integration
 
 ### 🔗 **API Endpoints** (Optional)
+
 If your backend supports these endpoints, the system will use them:
+
 - `GET /api/fee-reports/student` - Student-specific reports
 - `GET /api/fee-reports/class` - Class-wise reports
 - `GET /api/students` - Student list
@@ -71,6 +84,7 @@ If your backend supports these endpoints, the system will use them:
 - `GET /api/sections/:classId` - Section list
 
 ### 🔄 **Fallback Mode**
+
 If backend endpoints are not available, the system automatically uses mock data for demonstration purposes.
 
 ## File Structure
@@ -88,19 +102,25 @@ src/
 ## Components
 
 ### **FeeReports.jsx**
+
 Main component handling:
+
 - Report configuration UI
 - Data filtering and display
 - Export functionality
 
 ### **FeeReportService.js**
+
 Service class handling:
+
 - API communication
 - Mock data fallback
 - Data transformation
 
 ### **Invoice Generator**
+
 Enhanced to support:
+
 - Fee report PDFs
 - Professional formatting
 - Summary and detail views
