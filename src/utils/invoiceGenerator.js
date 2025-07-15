@@ -131,6 +131,8 @@ const getInvoiceTitle = (type) => {
       return 'BUS FEE';
     case 'expenditure':
       return 'EXPENDITURE';
+    case 'fee_report':
+      return 'FEE REPORT';
     case 'fee':
     default:
       return 'SCHOOL FEE';
@@ -203,6 +205,97 @@ const getInvoiceContent = (data, type) => {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      `;
+    
+    case 'fee_report':
+      return `
+        <div style="background: white; border: 2px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+          <div style="background: #6366f1; color: white; padding: 15px;">
+            <h3 style="margin: 0; font-size: 18px; font-weight: bold;">FEE REPORT SUMMARY</h3>
+          </div>
+          <div style="padding: 20px;">
+            <div style="margin-bottom: 20px;">
+              <h4 style="margin: 0 0 10px 0; color: #374151;">Report Information</h4>
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px; font-weight: bold; background: #f9fafb;">Report Type:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px;">${data.reportType || 'N/A'}</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px; font-weight: bold; background: #f9fafb;">Period:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px;">${data.period || 'N/A'}</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px; font-weight: bold; background: #f9fafb;">Generated Date:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px;">${data.generatedDate || 'N/A'}</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px; font-weight: bold; background: #f9fafb;">Total Students:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 10px;">${data.totalStudents || '0'}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <h4 style="margin: 0 0 10px 0; color: #374151;">Financial Summary</h4>
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tbody>
+                  <tr style="background: #f3f4f6;">
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; font-weight: bold;">Total Fee Amount:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; text-align: right; font-weight: bold; color: #059669;">₹${data.totalAmount || '0'}</td>
+                  </tr>
+                  <tr style="background: #f3f4f6;">
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; font-weight: bold;">Total Amount Paid:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; text-align: right; font-weight: bold; color: #0891b2;">₹${data.totalPaid || '0'}</td>
+                  </tr>
+                  <tr style="background: #f3f4f6;">
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; font-weight: bold;">Total Amount Due:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; text-align: right; font-weight: bold; color: #dc2626;">₹${data.totalDue || '0'}</td>
+                  </tr>
+                  <tr style="background: #6366f1; color: white;">
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; font-weight: bold;">Collection Percentage:</td>
+                    <td style="border: 1px solid #e5e7eb; padding: 12px; text-align: right; font-weight: bold;">${data.totalAmount > 0 ? ((data.totalPaid / data.totalAmount) * 100).toFixed(1) : '0'}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            ${data.data && data.data.length > 0 ? `
+            <div>
+              <h4 style="margin: 0 0 10px 0; color: #374151;">Detailed Report (First 20 Records)</h4>
+              <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                <thead>
+                  <tr style="background: #6366f1; color: white;">
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">Student ID</th>
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">Name</th>
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: left;">Class</th>
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: right;">Fee Amount</th>
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: right;">Paid</th>
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: right;">Due</th>
+                    <th style="border: 1px solid #e5e7eb; padding: 8px; text-align: center;">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${data.data.slice(0, 20).map((row, index) => `
+                    <tr style="background: ${index % 2 === 0 ? '#f9fafb' : 'white'};">
+                      <td style="border: 1px solid #e5e7eb; padding: 8px;">${row.studentId || 'N/A'}</td>
+                      <td style="border: 1px solid #e5e7eb; padding: 8px;">${row.studentName || 'N/A'}</td>
+                      <td style="border: 1px solid #e5e7eb; padding: 8px;">${row.class || 'N/A'}</td>
+                      <td style="border: 1px solid #e5e7eb; padding: 8px; text-align: right;">₹${row.feeAmount || '0'}</td>
+                      <td style="border: 1px solid #e5e7eb; padding: 8px; text-align: right;">₹${row.amountPaid || '0'}</td>
+                      <td style="border: 1px solid #e5e7eb; padding: 8px; text-align: right;">₹${row.amountDue || '0'}</td>
+                      <td style="border: 1px solid #e5e7eb; padding: 8px; text-align: center;">
+                        <span style="padding: 2px 6px; border-radius: 3px; color: white; background: ${row.amountDue === 0 ? '#059669' : '#dc2626'};">
+                          ${row.amountDue === 0 ? 'Paid' : 'Pending'}
+                        </span>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+              ${data.data.length > 20 ? `<p style="text-align: center; color: #6b7280; margin: 10px 0;">Showing first 20 records out of ${data.data.length} total records</p>` : ''}
+            </div>
+            ` : ''}
           </div>
         </div>
       `;

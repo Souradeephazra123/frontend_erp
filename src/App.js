@@ -53,6 +53,7 @@ import BusFee from "../src/component/BusFee";
 import AddBusFee from "../src/component/Addbusfee";
 import SubmitBusFee from "../src/component/BusFeeSubmit";
 import BusFeeDetails from "../src/component/ShowBusFee";
+import FeeReports from "../src/component/FeeReports";
 
 const CategoryForFee = () => (
   <div className="flex-col gap-14">
@@ -170,6 +171,7 @@ const App = () => {
           <Route path="/fee-details/:id" element={<FeeDetails />} />
           <Route path="/payment-details" element={<PaymentDetails />} />
           <Route path="/expense" element={<ExpenditureManagement />} />
+          <Route path="/fee-reports" element={<FeeReports />} />
         </Route>
 
         <Route path="/id-card/:id" element={<IdCard />} />
