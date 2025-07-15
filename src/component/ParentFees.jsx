@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Header from "../dashboard/Header";
 import * as XLSX from "xlsx";
 import { generateInvoicePDF } from "../utils/invoiceGenerator";
@@ -15,121 +14,122 @@ const ParentFees = () => {
   useEffect(() => {
     // Get student ID from parent login
     const parentStudentId = localStorage.getItem("parentStudentId") || "1";
+
+    const fetchStudentInfo = async (studentId) => {
+      try {
+        // Mock student info - replace with actual API call
+        const mockStudentInfo = {
+          id: studentId,
+          name: "John Doe",
+          class: "10th Grade",
+          section: "A",
+          rollNumber: "2024001",
+          fatherName: "Mr. Smith Doe",
+          admissionNumber: "ADM2024001",
+        };
+        setStudentInfo(mockStudentInfo);
+      } catch (error) {
+        console.error("Error fetching student info:", error);
+      }
+    };
+
+    const fetchFeeData = async (studentId) => {
+      setLoading(true);
+      try {
+        // Mock fee data - replace with actual API call
+        const mockFeeData = [
+          {
+            id: 1,
+            category: "Tuition Fee",
+            subcategory: "Monthly Fee",
+            totalAmount: 5000,
+            paidAmount: 3000,
+            dueAmount: 2000,
+            dueDate: "2024-01-31",
+            status: "Partial",
+          },
+          {
+            id: 2,
+            category: "Library Fee",
+            subcategory: "Annual Fee",
+            totalAmount: 500,
+            paidAmount: 500,
+            dueAmount: 0,
+            dueDate: "2024-01-15",
+            status: "Paid",
+          },
+          {
+            id: 3,
+            category: "Sports Fee",
+            subcategory: "Annual Fee",
+            totalAmount: 800,
+            paidAmount: 0,
+            dueAmount: 800,
+            dueDate: "2024-02-15",
+            status: "Pending",
+          },
+          {
+            id: 4,
+            category: "Examination Fee",
+            subcategory: "Half Yearly",
+            totalAmount: 300,
+            paidAmount: 300,
+            dueAmount: 0,
+            dueDate: "2024-01-10",
+            status: "Paid",
+          },
+        ];
+        setFeeData(mockFeeData);
+        calculateSummaryStats(mockFeeData);
+      } catch (error) {
+        console.error("Error fetching fee data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchPaymentHistory = async (studentId) => {
+      try {
+        // Mock payment history - replace with actual API call
+        const mockPaymentHistory = [
+          {
+            id: 1,
+            date: "2024-01-15",
+            amount: 3000,
+            feeCategory: "Tuition Fee",
+            paymentMethod: "Online",
+            transactionId: "TXN123456789",
+            receiptNumber: "RCP001",
+          },
+          {
+            id: 2,
+            date: "2024-01-10",
+            amount: 500,
+            feeCategory: "Library Fee",
+            paymentMethod: "Cash",
+            transactionId: "TXN123456790",
+            receiptNumber: "RCP002",
+          },
+          {
+            id: 3,
+            date: "2024-01-08",
+            amount: 300,
+            feeCategory: "Examination Fee",
+            paymentMethod: "Online",
+            transactionId: "TXN123456791",
+            receiptNumber: "RCP003",
+          },
+        ];
+        setPaymentHistory(mockPaymentHistory);
+      } catch (error) {
+        console.error("Error fetching payment history:", error);
+      }
+    };
+
     fetchStudentInfo(parentStudentId);
     fetchFeeData(parentStudentId);
     fetchPaymentHistory(parentStudentId);
   }, [selectedYear]);
-
-  const fetchStudentInfo = async (studentId) => {
-    try {
-      // Mock student info - replace with actual API call
-      const mockStudentInfo = {
-        id: studentId,
-        name: "John Doe",
-        class: "10th Grade",
-        section: "A",
-        rollNumber: "2024001",
-        fatherName: "Mr. Smith Doe",
-        admissionNumber: "ADM2024001",
-      };
-      setStudentInfo(mockStudentInfo);
-    } catch (error) {
-      console.error("Error fetching student info:", error);
-    }
-  };
-
-  const fetchFeeData = async (studentId) => {
-    setLoading(true);
-    try {
-      // Mock fee data - replace with actual API call
-      const mockFeeData = [
-        {
-          id: 1,
-          category: "Tuition Fee",
-          subcategory: "Monthly Fee",
-          totalAmount: 5000,
-          paidAmount: 3000,
-          dueAmount: 2000,
-          dueDate: "2024-01-31",
-          status: "Partial",
-        },
-        {
-          id: 2,
-          category: "Library Fee",
-          subcategory: "Annual Fee",
-          totalAmount: 500,
-          paidAmount: 500,
-          dueAmount: 0,
-          dueDate: "2024-01-15",
-          status: "Paid",
-        },
-        {
-          id: 3,
-          category: "Sports Fee",
-          subcategory: "Annual Fee",
-          totalAmount: 800,
-          paidAmount: 0,
-          dueAmount: 800,
-          dueDate: "2024-02-15",
-          status: "Pending",
-        },
-        {
-          id: 4,
-          category: "Examination Fee",
-          subcategory: "Half Yearly",
-          totalAmount: 300,
-          paidAmount: 300,
-          dueAmount: 0,
-          dueDate: "2024-01-10",
-          status: "Paid",
-        },
-      ];
-      setFeeData(mockFeeData);
-      calculateSummaryStats(mockFeeData);
-    } catch (error) {
-      console.error("Error fetching fee data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchPaymentHistory = async (studentId) => {
-    try {
-      // Mock payment history - replace with actual API call
-      const mockPaymentHistory = [
-        {
-          id: 1,
-          date: "2024-01-15",
-          amount: 3000,
-          feeCategory: "Tuition Fee",
-          paymentMethod: "Online",
-          transactionId: "TXN123456789",
-          receiptNumber: "RCP001",
-        },
-        {
-          id: 2,
-          date: "2024-01-10",
-          amount: 500,
-          feeCategory: "Library Fee",
-          paymentMethod: "Cash",
-          transactionId: "TXN123456790",
-          receiptNumber: "RCP002",
-        },
-        {
-          id: 3,
-          date: "2024-01-08",
-          amount: 300,
-          feeCategory: "Examination Fee",
-          paymentMethod: "Online",
-          transactionId: "TXN123456791",
-          receiptNumber: "RCP003",
-        },
-      ];
-      setPaymentHistory(mockPaymentHistory);
-    } catch (error) {
-      console.error("Error fetching payment history:", error);
-    }
-  };
 
   const calculateSummaryStats = (feeData) => {
     const totalFeeAmount = feeData.reduce(

@@ -54,11 +54,11 @@ import AddBusFee from "../src/component/Addbusfee";
 import SubmitBusFee from "../src/component/BusFeeSubmit";
 import BusFeeDetails from "../src/component/ShowBusFee";
 import FeeReports from "../src/component/FeeReports";
-import ParentDashboard from "../src/component/ParentDashboard";
-import ParentAttendance from "../src/component/ParentAttendance";
-import ParentFees from "../src/component/ParentFees";
-import ParentCertificates from "../src/component/ParentCertificates";
-import ParentLogin from "../src/component/ParentLogin";
+import ParentDashboard from "./component/ParentDashboard";
+import ParentAttendance from "./component/ParentAttendance";
+import ParentFees from "./component/ParentFees";
+import ParentCertificates from "./component/ParentCertificates";
+import ParentLogin from "./component/ParentLogin";
 
 const CategoryForFee = () => (
   <div className="flex-col gap-14">
