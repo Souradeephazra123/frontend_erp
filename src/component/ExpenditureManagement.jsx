@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../dashboard/Header";
 import * as XLSX from "xlsx";
+import { generateInvoicePDF } from "../utils/invoiceGenerator";
 
 const ExpenditureManagement = () => {
   const [expenditures, setExpenditures] = useState([]);
@@ -21,7 +22,7 @@ const ExpenditureManagement = () => {
   const fetchExpenditures = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure`
       );
       setExpenditures(response.data);
     } catch (error) {
@@ -35,7 +36,7 @@ const ExpenditureManagement = () => {
       try {
         await axios.put(
           `${process.env.REACT_APP_BASE_API_URL}/api/expenditure/${editingExpenditure.id}`,
-          newExpenditure,
+          newExpenditure
         );
         fetchExpenditures();
         resetForm();
@@ -47,7 +48,7 @@ const ExpenditureManagement = () => {
       try {
         await axios.post(
           `${process.env.REACT_APP_BASE_API_URL}/api/expenditure`,
-          newExpenditure,
+          newExpenditure
         );
         fetchExpenditures();
         resetForm();
@@ -71,7 +72,7 @@ const ExpenditureManagement = () => {
   const handleDeleteExpenditure = async (id) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure/${id}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/expenditure/${id}`
       );
       fetchExpenditures();
     } catch (error) {
@@ -101,6 +102,19 @@ const ExpenditureManagement = () => {
 
     // Save the file
     XLSX.writeFile(workbook, `expenditures.xlsx`);
+  };
+
+  const generateExpenditureInvoice = async (expenditure) => {
+    const invoiceData = {
+      invoiceNumber: `EXP${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}${expenditure.id}`,
+      expenditureType: expenditure.expenditureType,
+      description: expenditure.description,
+      Name: expenditure.Name,
+      amount: expenditure.amount,
+      date: expenditure.date,
+    };
+
+    await generateInvoicePDF(invoiceData, "expenditure");
   };
   return (
     <>
@@ -189,52 +203,69 @@ const ExpenditureManagement = () => {
           <h2 className="text-xl font-semibold text-gray-700 mb-4">
             Expenditure List
           </h2>
-          <button
-            onClick={downloadExcel}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Download as Excel
-          </button>
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={downloadExcel}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+            >
+              📊 Download Excel
+            </button>
+          </div>
 
-          <table className="table-auto w-full">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="p-2 text-left">ID</th>
-                <th className="p-2 text-left">Name</th>
-                <th className="p-2 text-left">Expenditure Type</th>
-                <th className="p-2 text-left">Description</th>
-                <th className="p-2 text-left">Amount</th>
-                <th className="p-2 text-left">Date</th>
-                <th className="p-2 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {expenditures.map((expenditure) => (
-                <tr key={expenditure.id} className="border-b">
-                  <td className="p-2">{expenditure.id}</td>
-                  <td className="p-2">{expenditure.Name}</td>
-                  <td className="p-2">{expenditure.expenditureType}</td>
-                  <td className="p-2">{expenditure.description}</td>
-                  <td className="p-2">{expenditure.amount}</td>
-                  <td className="p-2">{expenditure.date}</td>
-                  <td className="p-2 flex space-x-4">
-                    <button
-                      onClick={() => handleEditExpenditure(expenditure)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteExpenditure(expenditure.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="p-2 text-left">ID</th>
+                  <th className="p-2 text-left">Name</th>
+                  <th className="p-2 text-left">Expenditure Type</th>
+                  <th className="p-2 text-left">Description</th>
+                  <th className="p-2 text-left">Amount</th>
+                  <th className="p-2 text-left">Date</th>
+                  <th className="p-2 text-left">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {expenditures.map((expenditure) => (
+                  <tr key={expenditure.id} className="border-b">
+                    <td className="p-2">{expenditure.id}</td>
+                    <td className="p-2">{expenditure.Name}</td>
+                    <td className="p-2">{expenditure.expenditureType}</td>
+                    <td className="p-2">{expenditure.description}</td>
+                    <td className="p-2">₹{expenditure.amount}</td>
+                    <td className="p-2">{expenditure.date}</td>
+                    <td className="p-2">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEditExpenditure(expenditure)}
+                          className="text-blue-500 hover:text-blue-700 bg-blue-100 px-2 py-1 rounded text-sm"
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDeleteExpenditure(expenditure.id)
+                          }
+                          className="text-red-500 hover:text-red-700 bg-red-100 px-2 py-1 rounded text-sm"
+                        >
+                          🗑️ Delete
+                        </button>
+                        <button
+                          onClick={() =>
+                            generateExpenditureInvoice(expenditure)
+                          }
+                          className="text-green-500 hover:text-green-700 bg-green-100 px-2 py-1 rounded text-sm"
+                          title="Download Invoice PDF"
+                        >
+                          📄 Invoice
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

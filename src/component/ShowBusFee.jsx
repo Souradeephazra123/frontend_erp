@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as XLSX from "xlsx";
+import { generateInvoicePDF } from "../utils/invoiceGenerator";
 
 const BusFeeTracker = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const BusFeeTracker = () => {
         const [routesResponse, classesResponse] = await Promise.all([
           axios.get(`${process.env.REACT_APP_BASE_API_URL}/api/bus-routes`),
           axios.get(
-            `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`,
+            `${process.env.REACT_APP_BASE_API_URL}/api/class/classes/${id}`
           ),
         ]);
 
@@ -40,7 +41,7 @@ const BusFeeTracker = () => {
       if (!selectedRoute) return;
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/students?route_id=${selectedRoute}`
         );
         const data = await response.json();
         if (data.length === 0) {
@@ -63,7 +64,7 @@ const BusFeeTracker = () => {
       if (!selectedStudent) return;
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/transactions?student_id=${selectedStudent}`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/transactions?student_id=${selectedStudent}`
         );
         const data = await response.json();
         if (data.length === 0) {
@@ -93,6 +94,36 @@ const BusFeeTracker = () => {
 
     // Save the file
     XLSX.writeFile(workbook, `Transactions_${selectedStudent}.xlsx`);
+  };
+
+  const generateInvoice = async (transaction) => {
+    const selectedStudentData = students.find(
+      (s) => s.id.toString() === selectedStudent
+    );
+    const selectedRouteData = routes.find(
+      (r) => r.id.toString() === selectedRoute
+    );
+
+    const invoiceData = {
+      invoiceNumber: `BUS${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}${Math.floor(
+        Math.random() * 1000
+      )
+        .toString()
+        .padStart(3, "0")}`,
+      studentName: selectedStudentData
+        ? `${selectedStudentData.firstName} ${selectedStudentData.lastName}`
+        : "N/A",
+      class: selectedStudentData?.class || "N/A",
+      section: selectedStudentData?.section || "N/A",
+      route: selectedRouteData?.route_info || "N/A",
+      month: transaction.payment_month,
+      amount: transaction.paid_amount,
+      paymentDate: new Date(transaction.payment_date).toLocaleDateString(
+        "en-IN"
+      ),
+    };
+
+    await generateInvoicePDF(invoiceData, "bus_fee");
   };
 
   return (
@@ -212,6 +243,9 @@ const BusFeeTracker = () => {
                     <th className="border border-gray-300 px-4 py-2">
                       Payment Date
                     </th>
+                    <th className="border border-gray-300 px-4 py-2">
+                      Invoice
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -228,8 +262,17 @@ const BusFeeTracker = () => {
                       </td>
                       <td className="border border-gray-300 px-4 py-2 text-center">
                         {new Date(
-                          transaction.payment_date,
+                          transaction.payment_date
                         ).toLocaleDateString()}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">
+                        <button
+                          onClick={() => generateInvoice(transaction)}
+                          className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
+                          title="Download Invoice PDF"
+                        >
+                          📄 Invoice
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -237,13 +280,25 @@ const BusFeeTracker = () => {
               </table>
             </div>
 
-            {/* Download Button */}
-            <button
-              onClick={downloadExcel}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Download as Excel
-            </button>
+            {/* Download Buttons */}
+            <div className="mt-4 flex gap-4">
+              <button
+                onClick={downloadExcel}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+              >
+                📊 Download Excel
+              </button>
+              <button
+                onClick={() => {
+                  if (transactions.length > 0) {
+                    generateInvoice(transactions[0]); // Generate invoice for latest transaction
+                  }
+                }}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+              >
+                📄 Download Latest Invoice
+              </button>
+            </div>
           </div>
         )}
       </div>

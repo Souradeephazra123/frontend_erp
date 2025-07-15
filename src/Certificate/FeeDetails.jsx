@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Header from "../dashboard/Header";
+import { generateInvoicePDF } from "../utils/invoiceGenerator";
 
 const FeeTableComponent = () => {
   const { id } = useParams();
@@ -36,7 +37,7 @@ const FeeTableComponent = () => {
         setAcademicYear(response.data);
       })
       .catch((error) =>
-        console.error("Error fetching class and division options:", error),
+        console.error("Error fetching class and division options:", error)
       );
   }, []);
 
@@ -48,7 +49,7 @@ const FeeTableComponent = () => {
         console.log(response);
         if (response.data.message == "Success") {
           const filteredData = response.data.data.filter(
-            (fee) => fee.fee_id !== 0,
+            (fee) => fee.fee_id !== 0
           );
           setFeeData(filteredData);
         } else {
@@ -76,7 +77,7 @@ const FeeTableComponent = () => {
   const fetchSubcategories = (categoryId) => {
     axios
       .get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories?categoryId=${categoryId}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/fee-subcategories?categoryId=${categoryId}`
       )
       .then((response) => {
         setSubcategories(response.data);
@@ -161,7 +162,7 @@ const FeeTableComponent = () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_API_URL}/api/payment/` + feeId,
-        data,
+        data
       );
 
       setFormData({
@@ -196,7 +197,7 @@ const FeeTableComponent = () => {
       // Make the API call with the data
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_API_URL}/api/payment/fullpayment/` + Id,
-        paymentData,
+        paymentData
       );
 
       // Handle success response
@@ -222,7 +223,7 @@ const FeeTableComponent = () => {
       };
       await axios.post(
         `${process.env.REACT_APP_BASE_API_URL}/api/payCarryForwardFee`,
-        payload,
+        payload
       );
       alert("Carry Forward Fee Paid Successfully!");
       window.location.reload();
@@ -230,10 +231,35 @@ const FeeTableComponent = () => {
       console.error("Error paying carry forward fee:", error);
     }
   };
+
+  // Generate invoice for fee payment
+  const generateFeeInvoice = async (payment) => {
+    try {
+      const invoiceData = {
+        invoiceNumber: `FEE-${payment.id || Date.now()}`,
+        studentName: studentInfo?.name || "Student",
+        studentId: studentInfo?.studentId || id,
+        class: studentInfo?.class || "N/A",
+        section: studentInfo?.section || "N/A",
+        fatherName: studentInfo?.fatherName || "N/A",
+        paymentDate: payment.payment_date,
+        month: payment.month,
+        paymentMethod: payment.payment_method,
+        amount: payment.payment_amount,
+        feeCategory: payment.fee_category || "General Fee",
+        feeSubcategory: payment.fee_subcategory || "N/A",
+      };
+
+      await generateInvoicePDF(invoiceData, "fee");
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      alert("Error generating invoice. Please try again.");
+    }
+  };
   const viewCarryPaymentDetails = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_API_URL}/api/payment/carry/${studentInfo?.carryForwardFee_id}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/payment/carry/${studentInfo?.carryForwardFee_id}`
       );
       setCarryPaymentDetails(response.data);
       setCarryModalOpen(true);
@@ -533,6 +559,7 @@ const FeeTableComponent = () => {
                       <th className="py-3 px-6 text-left">Payment</th>
                       <th className="py-3 px-6 text-left">Amount Paid</th>
                       <th className="py-3 px-6 text-left">Month</th>
+                      <th className="py-3 px-6 text-left">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="text-gray-600 text-sm">
@@ -552,6 +579,15 @@ const FeeTableComponent = () => {
                           ₹{payment.payment_amount}
                         </td>
                         <td className="py-3 px-6 text-left">{payment.month}</td>
+                        <td className="py-3 px-6 text-left">
+                          <button
+                            onClick={() => generateFeeInvoice(payment)}
+                            className="text-green-500 hover:text-green-700 bg-green-100 px-2 py-1 rounded text-sm"
+                            title="Download Invoice PDF"
+                          >
+                            📄 Invoice
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -580,7 +616,7 @@ const FeeTableComponent = () => {
                 <p>
                   <strong>Payment Date:</strong>{" "}
                   {new Date(
-                    carryPaymentDetails.paymentDate,
+                    carryPaymentDetails.paymentDate
                   ).toLocaleDateString()}
                 </p>
                 <div className="flex justify-end mt-4">
