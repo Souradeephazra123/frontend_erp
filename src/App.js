@@ -54,6 +54,11 @@ import AddBusFee from "../src/component/Addbusfee";
 import SubmitBusFee from "../src/component/BusFeeSubmit";
 import BusFeeDetails from "../src/component/ShowBusFee";
 import FeeReports from "../src/component/FeeReports";
+import ParentDashboard from "../src/component/ParentDashboard";
+import ParentAttendance from "../src/component/ParentAttendance";
+import ParentFees from "../src/component/ParentFees";
+import ParentCertificates from "../src/component/ParentCertificates";
+import ParentLogin from "../src/component/ParentLogin";
 
 const CategoryForFee = () => (
   <div className="flex-col gap-14">
@@ -134,6 +139,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/parent-login" element={<ParentLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/staffHome" element={<StaffHome />} />
         <Route path="/studentTable" element={<StudentTable />} />
@@ -197,6 +203,13 @@ const App = () => {
         <Route path="/file-upload" element={<FileUpload />} />
         <Route path="/studenteditable/:id" element={<StudentEditDetails />} />
         <Route path="/filter" element={<StudentFilter />} />
+
+        {/* Parent Routes - restricted access for parent user type */}
+        <Route path="/parent" element={<ParentDashboard />} />
+        <Route path="/parent/attendance" element={<ParentAttendance />} />
+        <Route path="/parent/fees" element={<ParentFees />} />
+        <Route path="/parent/certificates" element={<ParentCertificates />} />
+
         <Route path="*" element={<h1>Page Not Found</h1>} />
       </Routes>
     </Router>

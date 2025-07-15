@@ -18,7 +18,7 @@ const Login = () => {
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BASE_API_URL}/api/auth/login`,
-        value,
+        value
       );
       console.log("Login response:", res);
 
@@ -75,6 +75,18 @@ const Login = () => {
             Login
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Parent Portal?{" "}
+            <Link
+              to="/parent-login"
+              className="text-blue-500 hover:text-blue-700 font-semibold"
+            >
+              Click here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
