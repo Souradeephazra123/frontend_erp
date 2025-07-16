@@ -4,8 +4,8 @@ import axios from "axios";
 
 const Login = () => {
   const [value, setValue] = useState({
-    username: "",
-    password: "",
+    userName: "",
+    userPassword: "",
   });
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
@@ -48,7 +48,7 @@ const Login = () => {
             type="text"
             placeholder="Username"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            onChange={(e) => setValue({ ...value, username: e.target.value })}
+            onChange={(e) => setValue({ ...value, userName: e.target.value })}
             required
           />
           <div className="relative">
@@ -56,7 +56,7 @@ const Login = () => {
               type={showPassword ? "text" : "password"} // Dynamic type
               placeholder="Password"
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              onChange={(e) => setValue({ ...value, password: e.target.value })}
+              onChange={(e) => setValue({ ...value, userPassword: e.target.value })}
               required
             />
             <button
