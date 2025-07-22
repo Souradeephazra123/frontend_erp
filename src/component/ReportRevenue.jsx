@@ -26,35 +26,35 @@ const DailyReportTable = () => {
       } catch (err) {
         setError("Failed to fetch reports.");
         // Mock data for demonstration if API fails
-        const mockData = generateMockRevenueData();
-        setReports(mockData);
+        // const mockData = generateMockRevenueData();
+        // setReports(mockData);
       }
     };
     fetchReports();
   }, []);
 
   // Generate mock revenue data for demonstration
-  const generateMockRevenueData = () => {
-    const mockData = [];
-    const today = new Date();
+  // const generateMockRevenueData = () => {
+  //   const mockData = [];
+  //   const today = new Date();
 
-    for (let i = 30; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
+  //   for (let i = 30; i >= 0; i--) {
+  //     const date = new Date(today);
+  //     date.setDate(date.getDate() - i);
 
-      const revenue = Math.floor(Math.random() * 50000) + 10000; // 10k-60k
-      const expenditure = Math.floor(Math.random() * 20000) + 5000; // 5k-25k
+  //     const revenue = Math.floor(Math.random() * 50000) + 10000; // 10k-60k
+  //     const expenditure = Math.floor(Math.random() * 20000) + 5000; // 5k-25k
 
-      mockData.push({
-        id: i + 1,
-        date: date.toISOString().split("T")[0],
-        revenue: revenue,
-        expenditure: expenditure,
-        profit: revenue - expenditure,
-      });
-    }
-    return mockData;
-  };
+  //     mockData.push({
+  //       id: i + 1,
+  //       date: date.toISOString().split("T")[0],
+  //       revenue: revenue,
+  //       expenditure: expenditure,
+  //       profit: revenue - expenditure,
+  //     });
+  //   }
+  //   return mockData;
+  // };
 
   // Calculate summary data
   const calculateSummary = (data) => {
