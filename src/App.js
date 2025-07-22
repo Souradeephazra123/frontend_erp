@@ -60,6 +60,8 @@ import ParentFees from "./component/ParentFees";
 import ParentCertificates from "./component/ParentCertificates";
 import ParentLogin from "./component/ParentLogin";
 
+import  Toaster from "./providers/toaster";
+
 const CategoryForFee = () => (
   <div className="flex-col gap-14">
     <Header />
@@ -212,6 +214,7 @@ const App = () => {
 
         <Route path="*" element={<h1>Page Not Found</h1>} />
       </Routes>
+      <Toaster />
     </Router>
   );
 };

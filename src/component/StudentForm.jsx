@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
+//toast message
+import { toastError, toastLoading, toastSuccess } from "../component/ui/toast";
+
 import Header from "../dashboard/Header";
 
 const StudentForm = () => {
@@ -86,6 +89,43 @@ const StudentForm = () => {
   const HostelType = ["NA"];
   const busRouteOptions = ["Route 1", "Route 2", "Route 3"];
 
+  // Add school name state
+  const [schoolInfo, setSchoolInfo] = useState({
+    name: "Loading...",
+  });
+
+  // Add useEffect to fetch school information
+  useEffect(() => {
+    const fetchSchoolInfo = async () => {
+      try {
+        const selectedSchoolId = localStorage.getItem("selectedSchool");
+        if (selectedSchoolId) {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_API_URL}/api/school`
+          );
+          const filteredData = response.data.filter(
+            (school) => school.id === +selectedSchoolId
+          );
+          console.log("Filtered School Data:", filteredData);
+          setSchoolInfo({
+            name: filteredData[0].Name || "School Name",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching school info:", error);
+        // Fallback to default if API fails
+        setSchoolInfo({
+          name: "ERP Mind Growth Academy",
+          address: "Excellence in Education",
+          phone: "+91-XXXXXXXXXX",
+          email: "admission@erpmindgrowth.edu",
+        });
+      }
+    };
+
+    fetchSchoolInfo();
+  }, []);
+
   useEffect(() => {
     // Fetch class and division options from an API
     const id = localStorage.getItem("selectedSchool");
@@ -109,6 +149,7 @@ const StudentForm = () => {
     axios
       .get(`${process.env.REACT_APP_BASE_API_URL}/bus-route`)
       .then((response) => {
+        
         setBusRoutes(response.data);
       })
       .catch((error) =>
@@ -138,7 +179,7 @@ const StudentForm = () => {
             `${process.env.REACT_APP_BASE_API_URL}/api/class/divisions/${formData.class_id}`
           );
           const data = await response.json();
-          console.log(data);
+
           const divisions = data.map((division) => ({
             value: division.id,
             label: division.division_name,
@@ -220,8 +261,79 @@ const StudentForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // Frontend validation based on schema
+    const requiredFields = [
+      { key: "file", label: "Photo" },
+      { key: "academic_year", label: "Academic Year" },
+      { key: "first_name", label: "First Name" },
+      { key: "student_type", label: "Student Type" },
+      { key: "class_id", label: "Class" },
+      { key: "division_id", label: "Section" },
+      { key: "uid_no", label: "Aadhar No." },
+      { key: "admNo", label: "Admission No." },
+      { key: "regdNo", label: "Registration No." },
+      { key: "dob", label: "Date of Birth" },
+      { key: "gender", label: "Gender" },
+      { key: "category", label: "Category" },
+      { key: "present_address", label: "Present Address" },
+      { key: "permanent_address", label: "Permanent Address" },
+      { key: "country", label: "Country" },
+      { key: "state", label: "State" },
+      { key: "city", label: "City" },
+      { key: "district", label: "District" },
+      { key: "pincode", label: "Pincode" },
+      { key: "mobile_no", label: "Mobile No" },
+      { key: "email_id", label: "Email ID" },
+    ];
 
+    for (let field of requiredFields) {
+      // For Select, check .value or .label
+
+      const fieldValue = formData[field.key];
+      if (!fieldValue) {
+        toastError(`${field.label} is required`);
+        return;
+      }
+
+      if (
+        field.key === "country" &&
+        (!formData.country ||
+          (typeof formData.country === "object" && !formData.country.value))
+      ) {
+        toastError(`Please select ${field.label}`);
+        return;
+      }
+      if (
+        !formData[field.key] ||
+        formData[field.key] === "" ||
+        formData[field.key] === "Select Gender" ||
+        formData[field.key] === "Select Category"
+      ) {
+        toastError(`Please enter ${field.label}`);
+        return;
+      }
+    }
+
+    // Aadhar validation
+    if (formData.uid_no && !/^\d{12}$/.test(formData.uid_no)) {
+      toastError("Aadhar No. must be 12 digits");
+      return;
+    }
+    if (formData.mobile_no && !/^\d{10}$/.test(formData.mobile_no)) {
+      toastError("Mobile No. must be 10 digits");
+      return;
+    }
+    if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) {
+      toastError("Pincode must be 6 digits");
+      return;
+    }
+    // Email validation
+    if (formData.email_id && !/^\S+@\S+\.\S+$/.test(formData.email_id)) {
+      toastError("Please enter a valid Email ID");
+      return;
+    }
+
+    console.log("Form Data before submission:", formData);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_API_URL}/newstudent`,
@@ -234,7 +346,7 @@ const StudentForm = () => {
       );
 
       setIsSubmitted(true);
-      alert("Form submitted successfully!");
+      toastSuccess("Form submitted successfully!");
 
       // Clear form data after successful submission
       setFormData({
@@ -247,7 +359,7 @@ const StudentForm = () => {
         class_id: "",
         division_id: "",
         uid_no: "",
-        regdNo: "",
+        admNo: "",
         dob: "",
         dob_place: "",
         blood_grp: "",
@@ -284,8 +396,20 @@ const StudentForm = () => {
       setImagePreview(null);
       setShowCountry(true);
     } catch (error) {
+      // Show backend error if available
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toastError(`Submission failed: ${error.response.data.message}`);
+      } else {
+        toastError(
+          "Submission failed. Please check all required fields and try again."
+        );
+      }
+      // Developer log
       console.error("Error submitting form:", error);
-      alert("Fill all the required fields!");
     }
   };
 
@@ -370,7 +494,7 @@ const StudentForm = () => {
               )}
             </div>
             <label className="block text-lg font-medium text-gray-700">
-              Upload Photo
+              Upload Photo <span className="text-red-500">*</span>
             </label>
             <input
               type="file"
@@ -566,7 +690,20 @@ const StudentForm = () => {
               Admission No.<span className="text-red-500">*</span>
             </label>
             <input
-              type="text"
+              type="number"
+              name="admNo"
+              value={formData.admNo}
+              onChange={handleChange}
+              className="mt-1 p-2 focus:outline-none rounded-md block w-full"
+              placeholder="Admission No."
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-black">
+              Registration No.<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
               name="regdNo"
               value={formData.regdNo}
               onChange={handleChange}
@@ -615,7 +752,6 @@ const StudentForm = () => {
               ))}
             </select>
           </div>
-
           <div>
             <label className="block font-medium text-black">
               Place of Birth
@@ -700,7 +836,7 @@ const StudentForm = () => {
               Mother Aadhar No.
             </label>
             <input
-              type="text"
+              type="number"
               name="mother_aadhar"
               value={formData.mother_aadhar}
               onChange={handleChange}
@@ -952,7 +1088,7 @@ const StudentForm = () => {
                   </div>
                   <div>
                     <h1 className="text-4xl font-bold text-blue-800 mb-1">
-                      ERP Mind Growth Academy
+                      {schoolInfo.name}
                     </h1>
                     <p className="text-lg text-gray-600">
                       Excellence in Education
@@ -965,7 +1101,7 @@ const StudentForm = () => {
                 <p className="text-base text-gray-700 mt-2 font-semibold">
                   Academic Year:{" "}
                   {academicYear.find(
-                    (year) => year.id === formData.academic_year
+                    (year) => year.id === +formData.academic_year
                   )?.year || "N/A"}
                 </p>
               </div>
@@ -1013,11 +1149,11 @@ const StudentForm = () => {
                           </td>
                           <td className="py-2 text-gray-900 font-semibold">
                             {classOptions.find(
-                              (cls) => cls.value === formData.class_id
+                              (cls) => cls.value === +formData.class_id
                             )?.label || "N/A"}{" "}
                             -{" "}
                             {divisionOptions.find(
-                              (div) => div.value === formData.division_id
+                              (div) => div.value === +formData.division_id
                             )?.label || "N/A"}
                           </td>
                         </tr>
